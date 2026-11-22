@@ -8,38 +8,34 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap" rel="stylesheet">
 <style>
+@font-face{font-family:'TtukttakGamja';src:url('https://cdn.jsdelivr.net/gh/Project-Noonnu/2610081905@tuktakpotato/tuktakpotato/tuktakpotato.woff2') format('woff2');font-weight:400;font-display:swap}
 /* 한글: 에스코어드림(눈누), 영어: Andika(교과서와 같은 글자 모양). 글꼴 순서를 Andika 먼저 두어 영어 글자는 늘 Andika로 보인다. */
-@font-face{font-family:'Escoredream';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff') format('woff');font-weight:300;font-display:swap}
-@font-face{font-family:'Escoredream';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-4Regular.woff') format('woff');font-weight:400;font-display:swap}
-@font-face{font-family:'Escoredream';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-5Medium.woff') format('woff');font-weight:500;font-display:swap}
-@font-face{font-family:'Escoredream';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-6Bold.woff') format('woff');font-weight:600;font-display:swap}
-@font-face{font-family:'Escoredream';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-7ExtraBold.woff') format('woff');font-weight:700;font-display:swap}
 /* 그림책 한 권: 표지(오리 선생님이 읽어 줌) → 옆에서 본 강물(깃발 = 단계, 아기 오리가 헤엄침) → 차례(장 = 부).
    크레파스 느낌은 SVG 그림에 흔들림·거친 결 필터로 낸다. 모든 한글 안내 밑에 채도 뺀 영어 한 줄. */
 :root{
-  --paper:#ffe9d0; --card:#fffaf2; --ink:#4a2e1c; --muted:#7a6c60; --en:#7a6c60; --line:#e7cfb2;
-  --sky1:#ffc9a0; --sky2:#ffd8b0; --sky3:#ffe7c8; --grass:#9bd56e; --grassline:#4f8a2c; --water:#6cc0e4; --waterline:#2f7fb0; --sand:#e9c79a;
-  --sun:#ff9a3c; --duck:#ffd43d; --wood:#a8703f;
+  --paper:#eaf1d8; --card:#fffdf2; --ink:#3b3223; --muted:#66705a; --en:#66705a; --line:#cbd9b0;
+  --sky1:#cfe6d6; --sky2:#dcecd6; --sky3:#e6f1d8; --grass:#86c25c; --grassline:#3f7a2a; --water:#78c3d2; --waterline:#2f8199; --sand:#cdb684;
+  --tree1:#4f9a45; --tree2:#2f6e3a; --trunk:#7a5230; --sun:#ffd65a; --duck:#ffd43d; --wood:#a8703f;
   --c:#2368d8; --s:#e2552b; --d:#7a52e6; --l:#14996a; --r:#d43c7e; --o:#c27a00; --x:#4f7b93; --y:#4f7b93;
   --g:#0f7f8c; --sil:#a89a8c; --ok:#14996a; --bad:#d6342c;
-  --title:"Andika","Escoredream","Apple SD Gothic Neo","Malgun Gothic",sans-serif; --body:"Andika","Escoredream","Apple SD Gothic Neo","Malgun Gothic",sans-serif; --eng:"Andika","Trebuchet MS",sans-serif;
+  --title:"Andika","TtukttakGamja","Apple SD Gothic Neo","Malgun Gothic",sans-serif; --body:"Andika","TtukttakGamja","Apple SD Gothic Neo","Malgun Gothic",sans-serif; --eng:"Andika","Trebuchet MS",sans-serif;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --paper:#2a2030; --card:#352a3a; --ink:#fbeedd; --muted:#c9b8a8; --en:#b3a596; --line:#4d3f52;
-  --sky1:#2b2346; --sky2:#33295a; --sky3:#3d3064; --grass:#2f5a32; --grassline:#8fd06a; --water:#1f5a7a; --waterline:#7fc8ef; --sand:#5a4636;
+  --paper:#1d2a21; --card:#27372b; --ink:#f3f0dc; --muted:#b8c4a8; --en:#a9b59a; --line:#3e5242;
+  --sky1:#1b2b33; --sky2:#20333a; --sky3:#263c3f; --grass:#2f5a32; --grassline:#8fd06a; --water:#1f5a6a; --waterline:#7fc8d8; --sand:#4e4532; --tree1:#2f5e34; --tree2:#1f4428; --trunk:#5a3e26;
   --sun:#f2e2a0; --wood:#c48a52;
   --c:#7fb0ff; --s:#ff9070; --d:#bba4ff; --l:#5ed8a8; --r:#ff86b8; --o:#ffc55c; --x:#9cc8de; --y:#9cc8de;
   --g:#5fd0dc; --sil:#8c7f73; --ok:#5ed8a8; --bad:#ff8077; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --paper:#2a2030; --card:#352a3a; --ink:#fbeedd; --muted:#c9b8a8; --en:#b3a596; --line:#4d3f52;
-  --sky1:#2b2346; --sky2:#33295a; --sky3:#3d3064; --grass:#2f5a32; --grassline:#8fd06a; --water:#1f5a7a; --waterline:#7fc8ef; --sand:#5a4636;
+  --paper:#1d2a21; --card:#27372b; --ink:#f3f0dc; --muted:#b8c4a8; --en:#a9b59a; --line:#3e5242;
+  --sky1:#1b2b33; --sky2:#20333a; --sky3:#263c3f; --grass:#2f5a32; --grassline:#8fd06a; --water:#1f5a6a; --waterline:#7fc8d8; --sand:#4e4532; --tree1:#2f5e34; --tree2:#1f4428; --trunk:#5a3e26;
   --sun:#f2e2a0; --wood:#c48a52;
   --c:#7fb0ff; --s:#ff9070; --d:#bba4ff; --l:#5ed8a8; --r:#ff86b8; --o:#ffc55c; --x:#9cc8de; --y:#9cc8de;
   --g:#5fd0dc; --sil:#8c7f73; --ok:#5ed8a8; --bad:#ff8077; color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--paper);color:var(--ink);font-family:var(--body);font-weight:400;font-size:20px;line-height:1.35;word-break:keep-all;overflow-wrap:break-word}
+body{background-color:var(--paper);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .25 0 0 0 0 .35 0 0 0 0 .15 0 0 0 .5 -.18'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E"),radial-gradient(ellipse at 10% 0%,color-mix(in srgb,var(--tree1) 16%,transparent),transparent 55%),radial-gradient(ellipse at 95% 100%,color-mix(in srgb,var(--tree1) 14%,transparent),transparent 50%);background-attachment:fixed;color:var(--ink);font-family:var(--body);font-weight:400;font-size:20px;line-height:1.35;word-break:keep-all;overflow-wrap:break-word}
 button,input{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:3px solid var(--sun);outline-offset:3px}
@@ -358,7 +354,7 @@ let duckAt = store.get("duckAt", 1);
 
 /* ---------- 그림 (직접 그린 오리들) ---------- */
 const BABY = '<svg viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#wobble)"><path d="M12 66c0-16 14-24 30-24 10 0 16-6 16-14 0-12 9-20 20-20s19 9 18 20c-1 8-6 13-12 15 3 5 4 10 3 15-3 18-20 28-40 28S12 82 12 66z" fill="#ffd43d" stroke="#4a2e1c" stroke-width="4.5" stroke-linejoin="round"/><path d="M84 30c6 0 11 2 13 5-3 3-8 5-13 4" fill="#ff7a1a" stroke="#4a2e1c" stroke-width="3.5" stroke-linejoin="round"/><circle cx="75" cy="22" r="4.4" fill="#4a2e1c"/><path d="M22 62c8-2 18 0 22 8-8 5-18 4-24-2" fill="#f5b51c" stroke="#4a2e1c" stroke-width="3.5" stroke-linejoin="round"/><circle cx="64" cy="33" r="4.5" fill="#ff9e8a"/></g></svg>';
-const TEACHER = '<svg class="teacher" viewBox="0 0 270 250" aria-hidden="true"><g filter="url(#wobble)"><path d="M10 240c-10-40 40-60 110-60s140 20 130 60z" fill="#b08a6a" stroke="#4a2e1c" stroke-width="5"/><path d="M60 170c0-34 26-56 64-56 10-32 34-52 62-48 28 4 42 30 36 58-4 18-18 30-32 34 8 28-14 52-64 54-42 2-66-14-66-42z" fill="#fffaf2" stroke="#4a2e1c" stroke-width="5" stroke-linejoin="round"/><path d="M218 110c16-2 28 2 34 10-8 8-24 10-36 6" fill="#ff7a1a" stroke="#4a2e1c" stroke-width="4" stroke-linejoin="round"/><circle cx="186" cy="98" r="14" fill="none" stroke="#4a2e1c" stroke-width="4"/><circle cx="212" cy="96" r="12" fill="none" stroke="#4a2e1c" stroke-width="4"/><circle cx="188" cy="98" r="4.5" fill="#4a2e1c"/><path d="M80 150l50-14 50 14-50 34z" fill="#2368d8" stroke="#4a2e1c" stroke-width="4" stroke-linejoin="round"/><path d="M130 136v48" stroke="#4a2e1c" stroke-width="3"/><circle cx="56" cy="40" r="30" fill="#ff9a3c" stroke="#e8661c" stroke-width="6"/></g></svg>';
+const TEACHER = '<svg class="teacher" viewBox="0 0 270 250" aria-hidden="true"><g filter="url(#wobble)"><path d="M10 240c-10-40 40-60 110-60s140 20 130 60z" fill="#b08a6a" stroke="#4a2e1c" stroke-width="5"/><path d="M60 170c0-34 26-56 64-56 10-32 34-52 62-48 28 4 42 30 36 58-4 18-18 30-32 34 8 28-14 52-64 54-42 2-66-14-66-42z" fill="#fffaf2" stroke="#4a2e1c" stroke-width="5" stroke-linejoin="round"/><path d="M218 110c16-2 28 2 34 10-8 8-24 10-36 6" fill="#ff7a1a" stroke="#4a2e1c" stroke-width="4" stroke-linejoin="round"/><circle cx="186" cy="98" r="14" fill="none" stroke="#4a2e1c" stroke-width="4"/><circle cx="212" cy="96" r="12" fill="none" stroke="#4a2e1c" stroke-width="4"/><circle cx="188" cy="98" r="4.5" fill="#4a2e1c"/><path d="M80 150l50-14 50 14-50 34z" fill="#2368d8" stroke="#4a2e1c" stroke-width="4" stroke-linejoin="round"/><path d="M130 136v48" stroke="#4a2e1c" stroke-width="3"/><circle cx="56" cy="40" r="30" fill="#ffd65a" stroke="#e8b21c" stroke-width="6"/></g></svg>';
 const GROW = [[0, "알", "an egg"], [1, "병아리", "a chick"], [11, "아기 오리", "a baby duck"], [26, "멋쟁이 오리", "a fine young duck"], [45, "다 자란 오리", "a grown-up duck"], [53, "탐정 오리", "a detective duck"]];
 function growth() { const n = Object.keys(passed).length; let g = GROW[0]; for (const x of GROW) if (n >= x[0]) g = x; return {n, ko: g[1], en: g[2]}; }
 
@@ -402,21 +398,24 @@ function utter(text, rate) {
   curU = u; /* 전역에 잡아 두어야 일부 크롬에서 소리가 중간에 끊기지 않는다 */
   return u;
 }
+let warmed = false; /* 처음 한 번 빈 소리로 엔진을 깨워 첫소리가 잘리지 않게 */
 function speakNow(u) {
   try {
     if (speechSynthesis.speaking || speechSynthesis.pending) speechSynthesis.cancel();
     if (speechSynthesis.paused) speechSynthesis.resume();
-    setTimeout(() => { try { speechSynthesis.speak(u); } catch (e) { soundTrouble(); } }, 60);
+    setTimeout(() => { try {
+      if (!warmed) { warmed = true; const w = new SpeechSynthesisUtterance(" "); w.volume = 0; w.lang = "en-US"; if (voice) w.voice = voice; speechSynthesis.speak(w); }
+      speechSynthesis.speak(u); } catch (e) { soundTrouble(); } }, 180);
   } catch (e) { soundTrouble(); }
 }
-function say(text, slow) { chainId++; if (!canSpeak) { soundTrouble(); return; } speakNow(utter(text, slow ? 0.5 : 0.8)); }
+function say(text, slow) { chainId++; if (!canSpeak) { soundTrouble(); return; } speakNow(utter(text, slow ? 0.45 : 0.65)); }
 function sayChain(words, onWord) {
   const id = ++chainId;
   if (!canSpeak) { soundTrouble(); onWord(-1); return; }
   const step = i => {
     if (id !== chainId) return;
     if (i >= words.length) { onWord(-1); return; }
-    const u = utter(words[i], 0.6);
+    const u = utter(words[i], 0.55);
     u.onstart = () => onWord(i);
     u.onend = () => setTimeout(() => step(i + 1), 450);
     if (i === 0) speakNow(u); else speechSynthesis.speak(u);
@@ -461,10 +460,17 @@ function riverSVG(W) {
   let waves = "", reeds = "";
   for (let x = 40; x < W; x += 210) waves += `<path d="M${x} ${232 + (x % 3) * 18}q30-12 60 0t60 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>`;
   for (let x = 90; x < W; x += 330) reeds += `<g transform="translate(${x} 150)"><path d="M0 0v-60M14 0v-44M-12 0v-38" stroke="var(--grassline)" stroke-width="6" stroke-linecap="round"/><ellipse cx="0" cy="-66" rx="7" ry="16" fill="#8a5a2b"/></g>`;
+  let trees = "";
+  for (let x = 20, k = 0; x < W; x += 95, k++) {
+    const y = 132 + (k % 3) * 6, s = 0.8 + (k * 37 % 5) / 10;
+    trees += k % 2
+      ? `<g transform="translate(${x} ${y}) scale(${s})"><path d="M-4 0h8v16h-8z" fill="var(--trunk)"/><path d="M0-62l24 40h-12l18 26h-60l18-26h-12z" fill="var(--tree2)" stroke="#24502a" stroke-width="4" stroke-linejoin="round"/></g>`
+      : `<g transform="translate(${x} ${y}) scale(${s})"><path d="M-4 0h8v16h-8z" fill="var(--trunk)"/><circle cx="0" cy="-30" r="30" fill="var(--tree1)" stroke="#2f6e3a" stroke-width="4"/><circle cx="-10" cy="-38" r="6" fill="#9fd27a" opacity=".7"/></g>`;
+  }
   let hill = `M0 128`; for (let x = 0; x <= W; x += 240) hill += ` q60 ${x % 480 ? 22 : -26} 120 0 t120 0`;
   return `<svg class="bg" width="${W}" height="330" aria-hidden="true"><g filter="url(#crayon)">
     <rect width="${W}" height="60" fill="var(--sky1)"/><rect y="60" width="${W}" height="40" fill="var(--sky2)"/><rect y="100" width="${W}" height="40" fill="var(--sky3)"/>
-    <path d="${hill} V170 H0z" fill="var(--grass)" stroke="var(--grassline)" stroke-width="6"/>
+    ${trees}<path d="${hill} V170 H0z" fill="var(--grass)" stroke="var(--grassline)" stroke-width="6"/>
     <rect y="168" width="${W}" height="122" fill="var(--water)"/>
     <path d="M0 170 ${Array.from({length: Math.ceil(W / 120) + 1}, (_, i) => `q30 10 60 0 t60 0`).join(" ")}" fill="none" stroke="var(--waterline)" stroke-width="7" stroke-linecap="round"/>
     ${waves}<rect y="288" width="${W}" height="42" fill="var(--sand)"/>${reeds}</g></svg>`;
