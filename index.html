@@ -8,7 +8,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap" rel="stylesheet">
 <style>
-@font-face{font-family:'TtukttakGamja';src:url('https://cdn.jsdelivr.net/gh/Project-Noonnu/2610081905@tuktakpotato/tuktakpotato/tuktakpotato.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Pretendard';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Light.woff2') format('woff2');font-weight:300;font-display:swap}
+@font-face{font-family:'Pretendard';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Pretendard';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'Pretendard';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-SemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'Pretendard';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Pretendard';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraBold.woff2') format('woff2');font-weight:800;font-display:swap}
 /* 한글: 에스코어드림(눈누), 영어: Andika(교과서와 같은 글자 모양). 글꼴 순서를 Andika 먼저 두어 영어 글자는 늘 Andika로 보인다. */
 /* 그림책 한 권: 표지(오리 선생님이 읽어 줌) → 옆에서 본 강물(깃발 = 단계, 아기 오리가 헤엄침) → 차례(장 = 부).
    크레파스 느낌은 SVG 그림에 흔들림·거친 결 필터로 낸다. 모든 한글 안내 밑에 채도 뺀 영어 한 줄. */
@@ -18,7 +23,7 @@
   --tree1:#4f9a45; --tree2:#2f6e3a; --trunk:#7a5230; --sun:#ffd65a; --duck:#ffd43d; --wood:#a8703f;
   --c:#2368d8; --s:#e2552b; --d:#7a52e6; --l:#14996a; --r:#d43c7e; --o:#c27a00; --x:#4f7b93; --y:#4f7b93;
   --g:#0f7f8c; --sil:#a89a8c; --ok:#14996a; --bad:#d6342c;
-  --title:"Andika","TtukttakGamja","Apple SD Gothic Neo","Malgun Gothic",sans-serif; --body:"Andika","TtukttakGamja","Apple SD Gothic Neo","Malgun Gothic",sans-serif; --eng:"Andika","Trebuchet MS",sans-serif;
+  --title:"Andika","Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif; --body:"Andika","Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif; --eng:"Andika","Trebuchet MS",sans-serif;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
@@ -306,6 +311,18 @@ body.turning{overflow-x:hidden}
 .ssheet .no{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:var(--cat);color:#fff;font-family:var(--eng);font-weight:700;font-size:28px;flex:none}
 .sstitle{font-size:28px;font-weight:700}
 @keyframes fadeIn{from{opacity:0}}
+/* 첫 접속: 천천히 밝아지며 하나씩 떠오르기 */
+html.arrive body{animation:arriveBg 1.4s ease both}
+html.arrive .main > *, html.arrive .bar{animation:rise 1.1s cubic-bezier(.2,.7,.2,1) both}
+html.arrive .bar{animation-delay:.2s}
+html.arrive .main > :nth-child(1){animation-delay:.35s}
+html.arrive .main > :nth-child(2){animation-delay:.75s}
+html.arrive .main > :nth-child(3){animation-delay:1.1s}
+html.arrive .main > :nth-child(4){animation-delay:1.4s}
+html.arrive dialog[open]{animation:rise 1s cubic-bezier(.2,.7,.2,1) 1.2s both}
+html.arrive dialog[open]::backdrop{animation:arriveBg 1s ease 1s both}
+@keyframes arriveBg{from{opacity:0}}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
@@ -454,7 +471,7 @@ const fx = n => X0 + (n - 1) * STEP;
 function topBar(small, backMain) {
   return `<div class="bar">${backMain ? `<button class="back" data-act="main" aria-label="${L("처음 화면으로", "Back to the start")}">←</button>` : small ? "" : `<div class="book">${BABY}</div>`}<span style="margin-right:auto"></span>
     <button class="chip" data-act="lang" aria-label="${L("영어로 보기", "Show in Korean")}">${L("EN", "한글")}</button>
-    <button class="chip" data-act="nick" aria-label="${L("닉네임 바꾸기", "Change nickname")}">${esc(nick || L("이름표", "Name tag"))}</button></div>`;
+    <button class="chip" data-act="nick" aria-label="${L("이름 바꾸기", "Change name")}">${esc(nick || L("이름표", "Name tag"))}</button></div>`;
 }
 function riverSVG(W) {
   let waves = "", reeds = "";
@@ -807,15 +824,15 @@ function playChain() {
 /* ---------- 닉네임 ---------- */
 const dlg = document.getElementById("nickDlg");
 function dlgText() {
-  document.getElementById("dlgT").textContent = L("꽥! 이름표", "Quack! Name tag");
-  document.getElementById("dlgP").textContent = L("별명 6글자까지 (진짜 이름은 안 돼요)", "A nickname, up to 6 letters (not your real name)");
+  document.getElementById("dlgT").textContent = L("이름을 입력해주세요", "Please enter your name");
+  document.getElementById("dlgP").textContent = L("6글자까지 쓸 수 있어요", "Up to 6 letters");
   document.getElementById("nickGo").textContent = L("시작!", "Start!");
-  document.getElementById("nickIn").placeholder = L("예: 수달왕", "e.g. Ducky");
+  document.getElementById("nickIn").placeholder = L("이름", "Name");
 }
 function askNick() { dlgText(); document.getElementById("nickIn").value = nick; document.getElementById("nickErr").textContent = ""; try { dlg.showModal(); } catch (e) { dlg.setAttribute("open", ""); } }
 function saveNick() {
   const v = document.getElementById("nickIn").value.replace(/\s+/g, "").slice(0, 6);
-  if (!v) { document.getElementById("nickErr").innerHTML = `${L(`별명을 써 주세요`, "Write a nickname")}`; return; }
+  if (!v) { document.getElementById("nickErr").innerHTML = `${L(`이름을 써 주세요`, "Write your name")}`; return; }
   nick = v; store.set("nick", v);
   try { dlg.close(); } catch (e) { dlg.removeAttribute("open"); }
   if (!S) rerender(); else document.querySelectorAll('[data-act="nick"]').forEach(c => c.firstChild.textContent = nick);
@@ -860,7 +877,7 @@ document.addEventListener("keydown", e => {
 });
 document.addEventListener("submit", e => e.preventDefault());
 
-document.documentElement.lang = LANG; dlgText();
+document.documentElement.lang = LANG; document.documentElement.classList.add("arrive"); setTimeout(() => document.documentElement.classList.remove("arrive"), 3200); dlgText();
 document.getElementById("dlgDuck").innerHTML = BABY;
 viewMain(); flushQueue();
 if (!nick) askNick();
