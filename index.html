@@ -415,14 +415,27 @@ function utter(text, rate) {
   curU = u; /* 전역에 잡아 두어야 일부 크롬에서 소리가 중간에 끊기지 않는다 */
   return u;
 }
-let warmed = false; /* 처음 한 번 빈 소리로 엔진을 깨워 첫소리가 잘리지 않게 */
-function speakNow(u) {
+/* 크롬에서 소리가 막히는 경우를 대비: 늘 대기열을 비우고, 1.5초 안에 소리가 시작되지 않으면 기본 목소리로 한 번 더 시도한다 */
+let speakTry = 0;
+function speakNow(u, retry) {
+  const my = ++speakTry;
   try {
-    if (speechSynthesis.speaking || speechSynthesis.pending) speechSynthesis.cancel();
+    speechSynthesis.cancel();
     if (speechSynthesis.paused) speechSynthesis.resume();
-    setTimeout(() => { try {
-      if (!warmed) { warmed = true; const w = new SpeechSynthesisUtterance(" "); w.volume = 0; w.lang = "en-US"; if (voice) w.voice = voice; speechSynthesis.speak(w); }
-      speechSynthesis.speak(u); } catch (e) { soundTrouble(); } }, 180);
+    let started = false;
+    const onstart = u.onstart;
+    u.onstart = ev => { started = true; if (onstart) onstart(ev); };
+    setTimeout(() => {
+      if (my !== speakTry) return;
+      try { speechSynthesis.speak(u); } catch (e) { soundTrouble(); return; }
+      setTimeout(() => {
+        if (started || my !== speakTry) return;
+        if (retry) { soundTrouble(); return; }
+        const r = new SpeechSynthesisUtterance(u.text); r.lang = "en-US"; r.rate = u.rate; r.volume = 1;
+        r.onstart = onstart; r.onend = u.onend; r.onerror = u.onerror; curU = r;
+        speakNow(r, true);
+      }, 1500);
+    }, 150);
   } catch (e) { soundTrouble(); }
 }
 function say(text, slow) { chainId++; if (!canSpeak) { soundTrouble(); return; } speakNow(utter(text, slow ? 0.45 : 0.65)); }
@@ -443,7 +456,9 @@ let troubleShown = false;
 function soundTrouble() {
   if (troubleShown) return; troubleShown = true;
   const t = document.createElement("div"); t.className = "toast"; t.setAttribute("role", "alert");
-  t.textContent = L("소리가 나지 않아요. 기기 소리를 켜고, 크롬이나 사파리에서 열어 보세요.", "No sound. Turn up the volume and open this page in Chrome or Safari.");
+  let nv = 0; try { nv = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang)).length; } catch (e) {}
+  t.textContent = canSpeak && !nv ? L("이 기기에 영어 목소리가 없어요. 다른 기기나 크롬 최신 버전에서 열어 보세요.", "This device has no English voice. Try another device or update Chrome.")
+    : L("소리가 나지 않아요. 기기 소리와 크롬 탭 음소거를 확인하고, 새로고침해 보세요.", "No sound. Check the volume and the tab mute, then reload.");
   document.body.appendChild(t); setTimeout(() => { t.remove(); troubleShown = false; }, 6000);
 }
 const ICON_MOUTH = '<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="var(--duck)" stroke="var(--ink)" stroke-width="3"/><circle cx="16" cy="18" r="2.6" fill="var(--ink)"/><circle cx="32" cy="18" r="2.6" fill="var(--ink)"/><ellipse cx="24" cy="32" rx="8" ry="5.5" fill="#ff7a1a" stroke="var(--ink)" stroke-width="2.5"/></svg>';
