@@ -8,12 +8,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap" rel="stylesheet">
 <style>
-@font-face{font-family:'Pretendard';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Light.woff2') format('woff2');font-weight:300;font-display:swap}
-@font-face{font-family:'Pretendard';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
-@font-face{font-family:'Pretendard';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
-@font-face{font-family:'Pretendard';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-SemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
-@font-face{font-family:'Pretendard';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
-@font-face{font-family:'Pretendard';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraBold.woff2') format('woff2');font-weight:800;font-display:swap}
+@font-face{font-family:'GMarketSans';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff');font-weight:300;font-display:swap}
+@font-face{font-family:'GMarketSans';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');font-weight:500;font-display:swap}
+@font-face{font-family:'GMarketSans';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');font-weight:700;font-display:swap}
 /* 한글: 에스코어드림(눈누), 영어: Andika(교과서와 같은 글자 모양). 글꼴 순서를 Andika 먼저 두어 영어 글자는 늘 Andika로 보인다. */
 /* 그림책 한 권: 표지(오리 선생님이 읽어 줌) → 옆에서 본 강물(깃발 = 단계, 아기 오리가 헤엄침) → 차례(장 = 부).
    크레파스 느낌은 SVG 그림에 흔들림·거친 결 필터로 낸다. 모든 한글 안내 밑에 채도 뺀 영어 한 줄. */
@@ -23,7 +20,7 @@
   --tree1:#4f9a45; --tree2:#2f6e3a; --trunk:#7a5230; --sun:#ffd65a; --duck:#ffd43d; --wood:#a8703f;
   --c:#2368d8; --s:#e2552b; --d:#7a52e6; --l:#14996a; --r:#d43c7e; --o:#c27a00; --x:#4f7b93; --y:#4f7b93;
   --g:#0f7f8c; --sil:#a89a8c; --ok:#14996a; --bad:#d6342c;
-  --title:"Andika","Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif; --body:"Andika","Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif; --eng:"Andika","Trebuchet MS",sans-serif;
+  --title:"Andika","GMarketSans","Apple SD Gothic Neo","Malgun Gothic",sans-serif; --body:"Andika","GMarketSans","Apple SD Gothic Neo","Malgun Gothic",sans-serif; --eng:"Andika","Trebuchet MS",sans-serif;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
@@ -323,7 +320,18 @@ html.arrive dialog[open]{animation:rise 1s cubic-bezier(.2,.7,.2,1) 1.2s both}
 html.arrive dialog[open]::backdrop{animation:arriveBg 1s ease 1s both}
 @keyframes arriveBg{from{opacity:0}}
 @keyframes rise{from{opacity:0;transform:translateY(24px)}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.grow{white-space:nowrap}.grow .dots,.grow .dots b{display:inline;font-style:normal;font-weight:inherit;margin:0;padding:0;border:0;background:none}.grow .dots{margin-left:2px;letter-spacing:2px}
+.grow .dots b{opacity:0;animation:dotIn .3s ease forwards}
+.grow .dots b:nth-child(1){animation-delay:.5s}.grow .dots b:nth-child(2){animation-delay:.85s}.grow .dots b:nth-child(3){animation-delay:1.2s}.grow .dots b:nth-child(4){animation-delay:1.55s}
+.grow em{font-style:normal;display:inline-block;margin-left:4px;opacity:0;animation:popIn .5s cubic-bezier(.3,1.6,.5,1) 2s forwards}
+html.arrive .grow .dots b{animation-delay:2.2s}html.arrive .grow .dots b:nth-child(2){animation-delay:2.55s}html.arrive .grow .dots b:nth-child(3){animation-delay:2.9s}html.arrive .grow .dots b:nth-child(4){animation-delay:3.25s}html.arrive .grow em{animation-delay:3.7s}
+.nextgrow{margin-top:6px;font-size:16px;color:var(--muted)}
+.bigduck.grew svg{animation:popIn .7s cubic-bezier(.3,1.6,.5,1)}
+@keyframes dotIn{to{opacity:1}}
+@keyframes popIn{0%{opacity:0;transform:scale(.3)}100%{opacity:1;transform:scale(1)}}
+.copy{text-align:center;font-size:14px;color:var(--muted);margin:0 0 24px}
+html.arrive .main > :nth-child(5){animation-delay:1.6s}
+@media (prefers-reduced-motion:reduce){.grow .dots b,.grow em{opacity:1!important}*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
@@ -349,7 +357,7 @@ html.arrive dialog[open]::backdrop{animation:arriveBg 1s ease 1s both}
 /* ================= 선생님 설정 =================
    구글 Apps Script를 웹 앱으로 배포한 뒤 받은 주소를 아래 따옴표 안에 붙여 넣으세요.
    비워 두면 기록을 보내지 않고 연습과 시험만 할 수 있어요. */
-const SCRIPT_URL = "";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzE9kcvg0VvbFS17NERR_cjY-MPdtB6ClG2cUNpFGvJp_JcMhFl1F4FuuUsOcZGLsoGHw/exec";
 const PASS_RATE = 0.75;
 /* =============================================== */
 
@@ -372,8 +380,16 @@ let duckAt = store.get("duckAt", 1);
 /* ---------- 그림 (직접 그린 오리들) ---------- */
 const BABY = '<svg viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#wobble)"><path d="M12 66c0-16 14-24 30-24 10 0 16-6 16-14 0-12 9-20 20-20s19 9 18 20c-1 8-6 13-12 15 3 5 4 10 3 15-3 18-20 28-40 28S12 82 12 66z" fill="#ffd43d" stroke="#4a2e1c" stroke-width="4.5" stroke-linejoin="round"/><path d="M84 30c6 0 11 2 13 5-3 3-8 5-13 4" fill="#ff7a1a" stroke="#4a2e1c" stroke-width="3.5" stroke-linejoin="round"/><circle cx="75" cy="22" r="4.4" fill="#4a2e1c"/><path d="M22 62c8-2 18 0 22 8-8 5-18 4-24-2" fill="#f5b51c" stroke="#4a2e1c" stroke-width="3.5" stroke-linejoin="round"/><circle cx="64" cy="33" r="4.5" fill="#ff9e8a"/></g></svg>';
 const TEACHER = '<svg class="teacher" viewBox="0 0 270 250" aria-hidden="true"><g filter="url(#wobble)"><path d="M10 240c-10-40 40-60 110-60s140 20 130 60z" fill="#b08a6a" stroke="#4a2e1c" stroke-width="5"/><path d="M60 170c0-34 26-56 64-56 10-32 34-52 62-48 28 4 42 30 36 58-4 18-18 30-32 34 8 28-14 52-64 54-42 2-66-14-66-42z" fill="#fffaf2" stroke="#4a2e1c" stroke-width="5" stroke-linejoin="round"/><path d="M218 110c16-2 28 2 34 10-8 8-24 10-36 6" fill="#ff7a1a" stroke="#4a2e1c" stroke-width="4" stroke-linejoin="round"/><circle cx="186" cy="98" r="14" fill="none" stroke="#4a2e1c" stroke-width="4"/><circle cx="212" cy="96" r="12" fill="none" stroke="#4a2e1c" stroke-width="4"/><circle cx="188" cy="98" r="4.5" fill="#4a2e1c"/><path d="M80 150l50-14 50 14-50 34z" fill="#2368d8" stroke="#4a2e1c" stroke-width="4" stroke-linejoin="round"/><path d="M130 136v48" stroke="#4a2e1c" stroke-width="3"/><circle cx="56" cy="40" r="30" fill="#ffd65a" stroke="#e8b21c" stroke-width="6"/></g></svg>';
-const GROW = [[0, "알", "an egg"], [1, "병아리", "a chick"], [11, "아기 오리", "a baby duck"], [26, "멋쟁이 오리", "a fine young duck"], [45, "다 자란 오리", "a grown-up duck"], [53, "탐정 오리", "a detective duck"]];
-function growth() { const n = Object.keys(passed).length; let g = GROW[0]; for (const x of GROW) if (n >= x[0]) g = x; return {n, ko: g[1], en: g[2]}; }
+/* 성장 단계: 통과한 깃발 수가 이만큼 되면 다음 모습으로 자란다 (숫자만 바꾸면 기준이 바뀜) */
+const GROW = [[0, "알", "an egg", "egg"], [10, "아기 오리", "a baby duck", "baby"], [30, "어른 오리", "a grown-up duck", "adult"]];
+function growth() {
+  const n = Object.keys(passed).length; let k = 0; GROW.forEach((x, i) => { if (n >= x[0]) k = i; });
+  const g = GROW[k], nx = GROW[k + 1];
+  return {n, ko: g[1], en: g[2], look: g[3], next: nx ? {ko: nx[1], en: nx[2], left: nx[0] - n} : null};
+}
+const EGG = '<svg viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#wobble)"><ellipse cx="50" cy="92" rx="30" ry="5" fill="#000" opacity=".12"/><path d="M50 8c20 0 34 30 34 52 0 20-15 32-34 32S16 80 16 60C16 38 30 8 50 8z" fill="#fff6dc" stroke="#4a2e1c" stroke-width="4.5"/><circle cx="38" cy="40" r="5" fill="#f2d48a"/><circle cx="62" cy="58" r="7" fill="#f2d48a"/><circle cx="44" cy="70" r="4" fill="#f2d48a"/><path d="M30 50l8 6 7-7 8 7 7-6" fill="none" stroke="#4a2e1c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/></g></svg>';
+const ADULT = '<svg viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#wobble)"><path d="M6 70c0-14 12-22 30-22 8 0 14-6 14-16 0-14 10-24 23-24s22 10 21 23c-1 9-6 15-13 17 3 6 4 11 3 17-3 20-22 30-44 30S6 86 6 70z" fill="#fffaf2" stroke="#4a2e1c" stroke-width="4.5" stroke-linejoin="round"/><path d="M52 44c8 3 17 3 24-1" fill="none" stroke="#2f8a4a" stroke-width="5" stroke-linecap="round"/><path d="M87 32c7 0 12 3 13 6-3 4-9 6-15 4" fill="#ff7a1a" stroke="#4a2e1c" stroke-width="3.5" stroke-linejoin="round"/><circle cx="78" cy="24" r="4.4" fill="#4a2e1c"/><path d="M18 66c10-3 22 0 27 10-10 6-22 5-29-3" fill="#e6dccb" stroke="#4a2e1c" stroke-width="3.5" stroke-linejoin="round"/><path d="M8 64l-6-8 10 2" fill="#fffaf2" stroke="#4a2e1c" stroke-width="3.5" stroke-linejoin="round"/></g></svg>';
+function duckSVG(look) { look = look || growth().look; return look === "egg" ? EGG : look === "adult" ? ADULT : BABY; }
 
 /* ---------- 단어 표시 ---------- */
 const plain = m => m.replace(/[\[\]\(\)|]/g, "");
@@ -410,7 +426,7 @@ function pickVoice() {
 }
 if (canSpeak) { pickVoice(); try { speechSynthesis.addEventListener("voiceschanged", pickVoice); } catch (e) { speechSynthesis.onvoiceschanged = pickVoice; } }
 function utter(text, rate) {
-  const u = new SpeechSynthesisUtterance(text); u.lang = "en-US"; if (voice) u.voice = voice; u.rate = rate; u.volume = 1;
+  const u = new SpeechSynthesisUtterance(String(text).replace(/\bSh+h\b!?/gi, "Shee,")); u.lang = "en-US"; if (voice) u.voice = voice; u.rate = rate; u.volume = 1;
   u.onerror = ev => { if (ev.error !== "interrupted" && ev.error !== "canceled") soundTrouble(); };
   curU = u; /* 전역에 잡아 두어야 일부 크롬에서 소리가 중간에 끊기지 않는다 */
   return u;
@@ -528,7 +544,8 @@ function viewMain() {
       ${TEACHER}
     </div>
     <div class="paperbox me">
-      <div class="who"><span class="meduck">${BABY}</span><div><div class="nickname">${esc(nick || L("이름표", "Name tag"))}</div><span class="grow">${L(`지금 나는 ${g.ko}`, `I am ${g.en}`)}</span></div></div>
+      <div class="who"><span class="meduck">${duckSVG(g.look)}</span><div><div class="nickname">${esc(nick || L("이름표", "Name tag"))}</div><span class="grow" aria-label="${L(`나는 ${g.ko}`, `I am ${g.en}`)}"><span aria-hidden="true">${L("나는", "I am")}<i class="dots"><b>.</b><b>.</b><b>.</b><b>.</b></i><em>${L(g.ko, g.en)}</em></span></span>
+        ${g.next ? `<div class="nextgrow">${L(`깃발 ${g.next.left}개 더 통과하면 ${g.next.ko}!`, `${g.next.left} more flags to become ${g.next.en}!`)}</div>` : `<div class="nextgrow">${L("다 자랐어요!", "All grown up!")}</div>`}</div></div>
       <div class="prog" aria-label="${L(`깃발 ${total}개 중 ${done}개 통과`, `${done} of ${total} flags passed`)}"><i style="width:${Math.round(done / total * 100)}%"></i></div>
       <dl class="facts">
         <dt>${L("통과한 깃발", "Flags passed")}</dt><dd><b>${done}</b> / ${total}</dd>
@@ -536,7 +553,8 @@ function viewMain() {
         <dt>${L("다음 깃발", "Next flag")}</dt><dd>${next.n} ${esc(T(next))}</dd>
       </dl>
     </div>
-    <div class="row" style="justify-content:center;margin:22px 0 50px"><button class="btn big" data-act="start">${L("시작하기 →", "Start →")}</button></div>
+    <div class="row" style="justify-content:center;margin:22px 0 28px"><button class="btn big" data-act="start">${L("시작하기 →", "Start →")}</button></div>
+    <p class="copy">© 2026 꽉오리쌤. All rights reserved.</p>
   </section>`;
 }
 /* 진도: 강물과 차례 */
@@ -553,7 +571,7 @@ function viewRiver() {
     ${riverSVG(W)}
     ${DATA.chapters.map((c, pi) => `<div class="sign" style="left:${fx(firstOf[pi]) - 70}px">${L(`${pi + 1}장 ${esc(c[0])}`, `${pi + 1}. ${c[1]}`)}</div>`).join("")}
     ${DATA.stages.map(s => `<button class="flag ${passed[s.n] ? "done" : ""} ${next.n === s.n ? "next" : ""}" style="left:${fx(s.n)}px;--cat:var(--${s.cat})" data-act="go" data-n="${s.n}" aria-label="${s.n}번 깃발 ${esc(s.title)}${passed[s.n] ? ", 통과" : ""}"><span class="pole"></span><span class="cloth"></span><span class="num">${s.n}</span><span class="t">${esc(s.titleEn && /[가-힣]/.test(s.title) ? s.titleEn : s.title)}</span></button>`).join("")}
-    <div class="swimmer" id="swimmer">${BABY}</div>
+    <div class="swimmer" id="swimmer">${duckSVG()}</div>
   </div></div>
   <p class="hint">${L("← 밀어 보세요 →", "← Swipe →")}</p>
   <section class="toc">
@@ -752,7 +770,7 @@ function nextStep() {
 }
 function viewDone() {
   S.view = "done";
-  app.innerHTML = lessonFrame(1, `<div class="center" style="gap:14px"><div class="bigduck yay">${BABY}</div>
+  app.innerHTML = lessonFrame(1, `<div class="center" style="gap:14px"><div class="bigduck yay">${duckSVG()}</div>
     <h2 class="donet">${L("연습 끝!", "Practice done!")}</h2><p class="lead">${L("이제 활동지를 꺼내 시험을 봐요", "Get your worksheet ready for the test")}</p>
     <button class="linkbtn" data-act="relearn">${L("한 번 더 연습하기", "Practice again")}</button></div>`,
     ctaFoot(L("시험 보기", "Start the test"), "totest"), "t-done");
@@ -805,11 +823,11 @@ function viewResult() {
   const msg = r.pass ? (r.stars === 3 ? L("모두 맞았어요!", "All correct!") : L("통과!", "Passed!")) : L("한 번 더 연습해요", "Practice once more");
   const sent = {wait: L("보내는 중…", "Sending…"), sent: L("선생님께 보냈어요", "Sent to your teacher"), queued: L("나중에 보낼게요", "Will send later"), off: L("활동지에만 적어요", "Worksheet only")}[r.sent];
   app.innerHTML = lessonFrame(1, `<div class="center" style="gap:10px">
-      <div class="bigduck ${r.pass ? "yay" : "oops"}">${BABY}</div>
+      <div class="bigduck ${r.pass ? "yay" : "oops"}">${duckSVG()}</div>
       <div class="stars" aria-label="${L("별", "stars")} ${r.stars}">${"★".repeat(r.stars)}${"☆".repeat(3 - r.stars)}</div>
       <h2 class="donet">${msg}</h2>
       <div class="score">${r.right}<span>/${r.total}</span></div>
-      ${r.grew ? `<p class="grownote">${L(`쑥쑥! 이제 ${g.ko}예요`, `You are ${g.en} now!`)}</p>` : ""}</div>
+      ${r.grew ? `<p class="grownote">${L(`쑥쑥! ${g.ko}로 자랐어요!`, `You grew into ${g.en}!`)}</p>` : ""}</div>
     <div class="sheet"><h3>${L("활동지에 적어요", "Write on your worksheet")}</h3><dl>
       <dt>${L("날짜", "Date")}</dt><dd>${L(`${r.d.getMonth() + 1}월 ${r.d.getDate()}일`, `${r.d.getMonth() + 1}/${r.d.getDate()}`)}</dd>
       <dt>${L("깃발", "Flag")}</dt><dd>${s.n} ${esc(T(s))}</dd>
@@ -900,7 +918,7 @@ document.addEventListener("keydown", e => {
 });
 document.addEventListener("submit", e => e.preventDefault());
 
-document.documentElement.lang = LANG; document.documentElement.classList.add("arrive"); setTimeout(() => document.documentElement.classList.remove("arrive"), 3200); dlgText();
+document.documentElement.lang = LANG; document.documentElement.classList.add("arrive"); setTimeout(() => document.documentElement.classList.remove("arrive"), 4400); dlgText();
 document.getElementById("dlgDuck").innerHTML = BABY;
 viewMain(); flushQueue();
 if (!nick) askNick();
