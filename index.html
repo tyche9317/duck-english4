@@ -415,27 +415,35 @@ function utter(text, rate) {
   curU = u; /* 전역에 잡아 두어야 일부 크롬에서 소리가 중간에 끊기지 않는다 */
   return u;
 }
-/* 크롬에서 소리가 막히는 경우를 대비: 늘 대기열을 비우고, 1.5초 안에 소리가 시작되지 않으면 기본 목소리로 한 번 더 시도한다 */
+/* 아이패드·아이폰(크롬 포함)은 손가락으로 누른 바로 그 순간에 소리를 시작해야 한다.
+   그래서 ① 처음 화면을 누를 때 소리 없는 짧은 소리로 잠금을 풀고, ② 가능하면 기다리지 않고 바로 읽는다. */
+let speechUnlocked = false;
+function unlockSpeech() {
+  if (speechUnlocked || !canSpeak) return; speechUnlocked = true;
+  try { const w = new SpeechSynthesisUtterance("a"); w.volume = 0; w.rate = 2; w.lang = "en-US"; speechSynthesis.speak(w); } catch (e) {}
+}
+["pointerdown", "touchend", "keydown", "click"].forEach(ev => document.addEventListener(ev, unlockSpeech, {capture: true, passive: true}));
 let speakTry = 0;
 function speakNow(u, retry) {
   const my = ++speakTry;
-  try {
-    speechSynthesis.cancel();
-    if (speechSynthesis.paused) speechSynthesis.resume();
-    let started = false;
-    const onstart = u.onstart;
-    u.onstart = ev => { started = true; if (onstart) onstart(ev); };
+  let started = false;
+  const onstart = u.onstart;
+  u.onstart = ev => { started = true; if (onstart) onstart(ev); };
+  const go = () => {
+    if (my !== speakTry) return;
+    try { if (speechSynthesis.paused) speechSynthesis.resume(); speechSynthesis.speak(u); } catch (e) { soundTrouble(); return; }
     setTimeout(() => {
-      if (my !== speakTry) return;
-      try { speechSynthesis.speak(u); } catch (e) { soundTrouble(); return; }
-      setTimeout(() => {
-        if (started || my !== speakTry) return;
-        if (retry) { soundTrouble(); return; }
-        const r = new SpeechSynthesisUtterance(u.text); r.lang = "en-US"; r.rate = u.rate; r.volume = 1;
-        r.onstart = onstart; r.onend = u.onend; r.onerror = u.onerror; curU = r;
-        speakNow(r, true);
-      }, 1500);
-    }, 150);
+      if (started || my !== speakTry) return;
+      if (retry) { soundTrouble(); return; }
+      const r = new SpeechSynthesisUtterance(u.text); r.lang = "en-US"; r.rate = u.rate; r.volume = 1;
+      r.onstart = onstart; r.onend = u.onend; r.onerror = u.onerror; curU = r;
+      try { speechSynthesis.cancel(); } catch (e) {}
+      speakNow(r, true);
+    }, 1800);
+  };
+  try {
+    if (speechSynthesis.speaking || speechSynthesis.pending) { speechSynthesis.cancel(); setTimeout(go, 120); }
+    else go();
   } catch (e) { soundTrouble(); }
 }
 function say(text, slow) { chainId++; if (!canSpeak) { soundTrouble(); return; } speakNow(utter(text, slow ? 0.45 : 0.65)); }
