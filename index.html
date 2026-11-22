@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Baby Duck's English Adventure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* 한글: 에스코어드림(눈누), 영어: Andika(교과서와 같은 글자 모양). 글꼴 순서를 Andika 먼저 두어 영어 글자는 늘 Andika로 보인다. */
+@font-face{font-family:'Escoredream';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff') format('woff');font-weight:300;font-display:swap}
+@font-face{font-family:'Escoredream';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-4Regular.woff') format('woff');font-weight:400;font-display:swap}
+@font-face{font-family:'Escoredream';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-5Medium.woff') format('woff');font-weight:500;font-display:swap}
+@font-face{font-family:'Escoredream';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-6Bold.woff') format('woff');font-weight:600;font-display:swap}
+@font-face{font-family:'Escoredream';src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-7ExtraBold.woff') format('woff');font-weight:700;font-display:swap}
+/* 그림책 한 권: 표지(오리 선생님이 읽어 줌) → 옆에서 본 강물(깃발 = 단계, 아기 오리가 헤엄침) → 차례(장 = 부).
+   크레파스 느낌은 SVG 그림에 흔들림·거친 결 필터로 낸다. 모든 한글 안내 밑에 채도 뺀 영어 한 줄. */
+:root{
+  --paper:#ffe9d0; --card:#fffaf2; --ink:#4a2e1c; --muted:#7a6c60; --en:#7a6c60; --line:#e7cfb2;
+  --sky1:#ffc9a0; --sky2:#ffd8b0; --sky3:#ffe7c8; --grass:#9bd56e; --grassline:#4f8a2c; --water:#6cc0e4; --waterline:#2f7fb0; --sand:#e9c79a;
+  --sun:#ff9a3c; --duck:#ffd43d; --wood:#a8703f;
+  --c:#2368d8; --s:#e2552b; --d:#7a52e6; --l:#14996a; --r:#d43c7e; --o:#c27a00; --x:#4f7b93; --y:#4f7b93;
+  --g:#0f7f8c; --sil:#a89a8c; --ok:#14996a; --bad:#d6342c;
+  --title:"Andika","Escoredream","Apple SD Gothic Neo","Malgun Gothic",sans-serif; --body:"Andika","Escoredream","Apple SD Gothic Neo","Malgun Gothic",sans-serif; --eng:"Andika","Trebuchet MS",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#2a2030; --card:#352a3a; --ink:#fbeedd; --muted:#c9b8a8; --en:#b3a596; --line:#4d3f52;
+  --sky1:#2b2346; --sky2:#33295a; --sky3:#3d3064; --grass:#2f5a32; --grassline:#8fd06a; --water:#1f5a7a; --waterline:#7fc8ef; --sand:#5a4636;
+  --sun:#f2e2a0; --wood:#c48a52;
+  --c:#7fb0ff; --s:#ff9070; --d:#bba4ff; --l:#5ed8a8; --r:#ff86b8; --o:#ffc55c; --x:#9cc8de; --y:#9cc8de;
+  --g:#5fd0dc; --sil:#8c7f73; --ok:#5ed8a8; --bad:#ff8077; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#2a2030; --card:#352a3a; --ink:#fbeedd; --muted:#c9b8a8; --en:#b3a596; --line:#4d3f52;
+  --sky1:#2b2346; --sky2:#33295a; --sky3:#3d3064; --grass:#2f5a32; --grassline:#8fd06a; --water:#1f5a7a; --waterline:#7fc8ef; --sand:#5a4636;
+  --sun:#f2e2a0; --wood:#c48a52;
+  --c:#7fb0ff; --s:#ff9070; --d:#bba4ff; --l:#5ed8a8; --r:#ff86b8; --o:#ffc55c; --x:#9cc8de; --y:#9cc8de;
+  --g:#5fd0dc; --sil:#8c7f73; --ok:#5ed8a8; --bad:#ff8077; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-weight:400;font-size:20px;line-height:1.35;word-break:keep-all;overflow-wrap:break-word}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--sun);outline-offset:3px}
+[hidden]{display:none!important}
+h1,h2,h3{font-family:var(--title);font-weight:700;margin:0;line-height:1;text-wrap:balance}
+.en{display:block;font-family:var(--eng);font-weight:400;font-size:.6em;line-height:1.3;color:var(--en);letter-spacing:0;margin-top:2px}
+.en.in{display:inline;margin:0 0 0 6px}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 0 4px}
+.bar .book{margin-right:auto;font-family:var(--title);font-size:22px;display:flex;align-items:center;gap:8px}
+.bar .book svg{width:38px;height:38px}
+.chip{font-weight:600;border:3px solid var(--ink);border-radius:999px;background:var(--card);padding:4px 14px;text-align:center;line-height:1.1;font-size:18px}
+.send{font-size:14px;color:var(--muted)}
+.btn{font-weight:700;display:inline-block;border:4px solid var(--ink);border-radius:18px 14px 20px 12px;padding:8px 24px;font-family:var(--title);font-size:26px;line-height:1.05;background:var(--sun);color:#4a2e1c;text-align:center;box-shadow:4px 4px 0 var(--ink);transition:transform .08s}
+.btn .en{color:#6b4a33}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.btn.soft{background:var(--card);color:var(--ink)}
+.btn.soft .en{color:var(--en)}
+.btn.sm{font-size:20px;padding:4px 14px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.paperbox{position:relative;background:var(--card);border:3px solid var(--ink);border-radius:24px;padding:16px 20px}
+
+/* 표지 */
+.cover{position:relative;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:10px;align-items:end;padding:8px 0 0}
+.cover h1{font-size:clamp(44px,9vw,74px);line-height:1}
+.cover h1 .en{font-size:clamp(17px,2.6vw,22px);margin-top:8px}
+.cover .who{font-size:22px}
+.cover svg.teacher{width:100%;max-width:330px;justify-self:end}
+.story{margin-top:12px}
+.story .grow{display:inline-block;margin-bottom:8px;background:var(--duck);color:#4a2e1c;border:3px solid var(--ink);border-radius:14px;padding:0 12px;font-size:20px}
+.story .grow .en{color:#6b4a33;display:inline;margin-left:6px}
+@media (max-width:620px){.cover{grid-template-columns:1fr}.cover svg.teacher{max-width:170px;margin-top:-6px;order:-1;justify-self:end;margin-bottom:-60px}}
+
+/* 강물 */
+.river{position:relative;overflow-x:auto;overflow-y:hidden;margin:18px -16px 0;border-top:4px solid var(--ink);border-bottom:4px solid var(--ink);scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+.river .scene{position:relative;height:330px}
+.river svg.bg{position:absolute;left:0;top:0}
+.flag{position:absolute;top:84px;width:110px;margin-left:-55px;height:200px;border:0;background:none;padding:0}
+.flag .pole{position:absolute;left:53px;top:0;width:8px;height:118px;border-radius:4px;background:var(--wood);border:2px solid var(--ink)}
+.flag .cloth{position:absolute;left:60px;top:4px;width:0;height:0;border-top:18px solid transparent;border-bottom:18px solid transparent;border-left:44px solid var(--cat)}
+.flag .num{position:absolute;left:30px;top:106px;width:54px;height:54px;border-radius:50%;background:var(--card);border:4px solid var(--ink);display:grid;place-items:center;font-family:var(--eng);font-weight:700;font-size:24px}
+.flag .t{position:absolute;left:-6px;right:-6px;top:166px;font-family:var(--eng);font-weight:700;font-size:15px;line-height:1.1;color:#1d4f6e;text-align:center}
+.flag.done .num{background:var(--duck)}
+.flag.done .cloth::after{content:"★";position:absolute;left:-40px;top:-14px;font-size:20px;color:#fff8c8}
+.flag.next .num{outline:4px dashed var(--sun);outline-offset:3px}
+.sign{font-weight:600;position:absolute;top:22px;transform:translateX(-50%);background:var(--wood);color:#fff8e8;border:3px solid var(--ink);border-radius:10px;padding:2px 12px;font-family:var(--title);font-size:20px;line-height:1.05;white-space:nowrap;text-align:center}
+.sign .en{color:#f3e2c8;font-size:12px}
+.swimmer{position:absolute;top:150px;left:0;width:92px;height:92px;margin-left:-46px;transition:transform .28s ease-in-out;pointer-events:none;z-index:2}
+.swimmer svg{width:100%;height:100%;animation:float 1.6s ease-in-out infinite;transform-origin:50% 80%}
+.swimmer.left svg{scale:-1 1}
+.swimmer.hop svg{animation:hop .28s ease-out}
+@keyframes float{50%{transform:translateY(-4px) rotate(-3deg)}}
+@keyframes hop{50%{transform:translateY(-26px)}}
+.hint{text-align:center;color:#1d4f6e;font-size:20px;margin:8px 0 0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .flag .t,:root:not([data-theme="light"]) .hint{color:#bfe3f5}}
+
+/* 차례 */
+.toc{margin:22px 0 50px}
+.toc h2{font-size:34px;display:flex;align-items:baseline;gap:10px}
+.toc h2 .en{display:inline;font-size:15px}
+.chs{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:10px}
+.ch{text-align:left;background:var(--card);border:3px solid var(--line);border-radius:16px;padding:10px 12px;line-height:1.15}
+
+.ch .k{font-size:14px;font-weight:600} .ch .nm{font-size:20px;font-weight:700}
+.ch.now{border-color:var(--ink);background:color-mix(in srgb,var(--sun) 14%,var(--card))}
+.ch.later{opacity:.62}
+
+/* 단계 */
+.stagehead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:6px 0 10px}
+.stagehead h1{font-size:clamp(30px,6vw,42px);margin-right:auto;display:flex;align-items:center;gap:12px}
+.stagehead h1 .no{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:var(--cat);color:#fff;font-family:var(--eng);font-weight:700;font-size:26px;flex:none}
+.back{width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-size:26px;line-height:1;flex:none}
+.stagehead h1 .en{font-size:17px}
+.pill{border:3px solid var(--ink);border-radius:999px;padding:0 12px;color:#fff;background:var(--cat);font-size:18px;line-height:1.3}
+.pill .en{color:#fff;opacity:.9}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.steps button{font-weight:600;border:3px solid var(--line);border-radius:999px;background:var(--card);padding:8px 4px;font-family:var(--title);font-size:20px;line-height:1.1}
+.steps button .en{font-size:12px}
+.steps button[aria-current="true"]{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.steps button[aria-current="true"] .en{color:#6b4a33}
+.card{position:relative;background:var(--card);border:3px solid var(--ink);border-radius:24px;padding:22px;margin:0 0 20px}
+.card.withduck{margin-top:46px}
+.buddy{position:absolute;right:16px;top:-58px;width:84px;height:84px}
+.buddy svg{width:100%;height:100%}
+.buddy.yay svg{animation:yay .6s ease 2}
+.buddy.oops svg{animation:oops .5s ease}
+@keyframes yay{30%{transform:translateY(-20px) rotate(-8deg)}60%{transform:translateY(0) rotate(6deg)}}
+@keyframes oops{25%{transform:rotate(-10deg)}75%{transform:rotate(10deg)}}
+.word{font-family:var(--eng);font-weight:700;font-size:clamp(52px,14vw,96px);line-height:1.1;letter-spacing:.03em;overflow-wrap:anywhere;display:inline-flex;flex-wrap:wrap;align-items:baseline}
+.word .hit{color:var(--cat);text-decoration:underline wavy;text-decoration-thickness:.06em;text-underline-offset:.14em}
+.word .sil{color:var(--sil);opacity:.75}
+.word .gap{display:inline-block;width:.2em;height:.2em;border-radius:50%;background:var(--sil);margin:0 .14em;align-self:center}
+.ko{font-size:24px;color:var(--muted)}
+.word+.ko{margin-top:12px}
+.sound{font-family:var(--eng);font-weight:700;font-size:44px;color:var(--cat);line-height:1}
+.rule{font-weight:600;font-size:26px;margin:6px 0 10px}
+.hear{width:78px;height:78px;border-radius:50%;border:4px solid var(--ink);background:var(--cat);color:#fff;display:grid;place-items:center;box-shadow:4px 4px 0 var(--ink);flex:none}
+.hear svg{width:38px;height:38px}
+.pairs{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.pair{border:3px dashed var(--ink);border-radius:16px;background:none;padding:6px 14px;display:flex;align-items:center;gap:10px;font-family:var(--eng);font-size:28px;font-weight:700}
+.pair em{font-style:normal;color:var(--muted)}
+.wlist{display:flex;flex-wrap:wrap;gap:10px 14px;margin-top:10px}
+.wbtn{border:3px solid var(--line);border-radius:14px;background:none;padding:4px 12px;display:flex;align-items:center;gap:8px}
+.wbtn .word{font-size:28px}
+.tag{display:inline-block;border-radius:8px;padding:0 8px;font-size:15px;background:var(--duck);color:#4a2e1c;border:2px solid var(--ink)}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dots i{width:16px;height:16px;border-radius:50%;border:2px solid var(--ink);background:var(--card)}
+.dots i.o{background:var(--ok)}
+.dots i.now{background:var(--cat)}
+.seg{display:inline-flex;border:3px solid var(--ink);border-radius:14px;overflow:hidden}
+.seg button{font-weight:600;border:0;background:var(--card);padding:4px 10px;font-family:var(--title);font-size:22px;line-height:1}
+.seg button .en{font-size:11px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--card)}
+.seg button[aria-pressed="true"] .en{color:var(--card);opacity:.8}
+.boxes{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0 6px}
+.boxes b{width:46px;height:58px;border-radius:12px 9px 13px 8px;border:3px solid var(--line);display:grid;place-items:center;font-family:var(--eng);font-size:34px;font-weight:700;background:var(--card)}
+.boxes b.hit{border-color:var(--cat);border-width:4px;background:color-mix(in srgb,var(--cat) 12%,var(--card))}
+.boxes b.sil{border-style:dashed;border-color:var(--sil)}
+.boxes b.sp{width:12px;border:0;background:none}
+.boxes b.hit.good{color:var(--cat)}
+.boxes b.wrong{color:var(--bad);border-color:var(--bad)}
+.type{width:100%;font-family:var(--eng);font-size:32px;padding:8px 14px;border:4px solid var(--ink);border-radius:16px;background:var(--card);margin-top:6px}
+.fb{font-weight:700;min-height:52px;font-family:var(--title);font-size:26px;margin:10px 0;line-height:1}
+.fb.ok{color:var(--ok)} .fb.no{color:var(--bad)}
+.bounce{animation:bounce .45s ease}
+@keyframes bounce{30%{transform:scale(1.1) rotate(-2deg)}60%{transform:scale(.97)}}
+.paper{font-weight:700;font-family:var(--title);font-size:clamp(30px,7vw,42px);text-align:center;margin:8px 0 18px;line-height:1.05}
+.paper b{color:var(--cat);font-weight:400;font-size:1.5em}
+.paper .en{font-size:18px}
+.center{display:flex;flex-direction:column;align-items:center;gap:14px}
+.ans{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:3px dashed var(--line);padding:10px 0}
+.ans .num{font-family:var(--title);font-size:30px;width:36px;color:var(--muted)}
+.ans .word{font-size:clamp(30px,7vw,42px);flex:1 1 160px;background:none;border:0;padding:0;text-align:left}
+.ox{display:flex}
+.ox button{width:56px;height:50px;border:3px solid var(--ink);background:var(--card);font-size:26px;font-family:var(--title)}
+.ox button:first-child{border-radius:14px 0 0 14px} .ox button:last-child{border-radius:0 14px 14px 0;border-left:0}
+.ox button[aria-pressed="true"].o{background:var(--ok);color:#fff}
+.ox button[aria-pressed="true"].x{background:var(--bad);color:#fff}
+.score{font-family:var(--eng);font-weight:700;font-size:80px;line-height:1;color:var(--cat)}
+.stars{font-size:44px;color:var(--o);letter-spacing:4px;line-height:1}
+.sheet{border:4px dashed var(--cat);border-radius:18px;padding:12px 16px;margin-top:16px}
+.sheet dl{display:grid;grid-template-columns:max-content 1fr;gap:4px 16px;margin:6px 0 0}
+.sheet dt{color:var(--muted)} .sheet dd{margin:0;font-family:var(--eng);font-weight:700;font-size:20px;overflow-wrap:anywhere}
+.err{color:var(--bad);font-size:18px;min-height:24px}
+dialog{border:4px solid var(--ink);border-radius:28px;background:var(--card);color:var(--ink);padding:22px;max-width:min(460px,calc(100% - 32px))}
+dialog::backdrop{background:rgba(60,35,20,.55)}
+dialog h2{font-size:34px}
+.nick{font-weight:600;width:100%;font-family:var(--title);font-size:30px;padding:6px 14px;border:4px solid var(--ink);border-radius:16px;background:var(--paper);margin:12px 0 4px}
+.goal{font-weight:500;font-size:18px;color:var(--muted);margin-bottom:4px}
+.toast{position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top));pointer-events:none;transform:translateX(-50%);z-index:20;max-width:min(560px,calc(100% - 32px));background:var(--ink);color:var(--card);border-radius:16px;padding:12px 18px;font-size:18px}
+.grownote{margin:14px 0 0;background:var(--duck);color:#4a2e1c;border-radius:14px;padding:8px 14px;font-size:22px}
+.goal .en{color:#6b4a33}
+.goal b{font-family:var(--eng);font-size:15px;border:2px solid #4a2e1c;border-radius:8px;padding:0 6px;white-space:nowrap}
+.how{display:flex;gap:12px;align-items:center;font-size:21px;margin:0 0 16px;color:var(--ink)}
+.how svg{width:44px;height:44px;flex:none}
+.chain{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
+.chain .wbtn{border-width:3px}
+.chain .wbtn.on{border-color:var(--cat);background:color-mix(in srgb,var(--cat) 14%,var(--card));transform:scale(1.08)}
+.chain .wbtn .word{font-size:40px}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0 6px}
+.opt{border:3px solid var(--ink);border-radius:20px;background:var(--card);padding:14px 8px;display:flex;justify-content:center}
+.opt .word{font-size:clamp(34px,8vw,52px)}
+.opt.right{background:color-mix(in srgb,var(--ok) 22%,var(--card));border-color:var(--ok)}
+.opt.wrong{background:color-mix(in srgb,var(--bad) 14%,var(--card));border-color:var(--bad);opacity:.7;animation:oops .4s ease}
+.main{max-width:640px;margin:0 auto}
+.maintitle{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,.7fr);align-items:end;gap:8px;padding-top:8px}
+.maintitle h1{font-size:clamp(40px,8vw,66px);line-height:1;word-break:normal;overflow-wrap:normal;hyphens:none}
+.maintitle svg.teacher{width:100%;max-width:260px;justify-self:end}
+.me{margin-top:10px}
+.who{display:flex;align-items:center;gap:14px}
+.meduck{width:72px;height:72px;flex:none} .meduck svg{width:100%;height:100%}
+.nickname{font-weight:700;font-size:36px;line-height:1}
+.grow{font-weight:600;display:inline-block;margin-top:6px;background:var(--duck);color:#4a2e1c;border:3px solid var(--ink);border-radius:999px;padding:0 12px;font-size:18px}
+.prog{height:18px;border:3px solid var(--ink);border-radius:999px;background:var(--paper);margin:16px 0 10px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--l);border-radius:999px;min-width:6px}
+.facts{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:0;font-size:20px}
+.facts dt{color:var(--muted)} .facts dd{font-weight:600;margin:0} .facts b{font-family:var(--eng);font-size:24px} .facts small{color:var(--muted);font-size:15px}
+.btn.big{font-size:34px;padding:12px 40px}
+.riverhead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:4px 0 0}
+.riverhead h1{font-size:clamp(34px,7vw,48px)}
+body.turning{overflow-x:hidden}
+.ghost{position:fixed;left:0;right:0;margin:0 auto;z-index:5;pointer-events:none;background:var(--paper)}
+.out-fwd{animation:outFwd 1.1s cubic-bezier(.55,0,.25,1) forwards}
+.in-fwd{animation:inFwd 1.1s cubic-bezier(.55,0,.25,1)}
+.out-back{animation:outBack 1.1s cubic-bezier(.55,0,.25,1) forwards}
+.in-back{animation:inBack 1.1s cubic-bezier(.55,0,.25,1)}
+@keyframes outFwd{to{transform:translateX(-105%);opacity:.3}}
+@keyframes inFwd{from{transform:translateX(105%);opacity:.3}}
+@keyframes outBack{to{transform:translateX(105%);opacity:.3}}
+@keyframes inBack{from{transform:translateX(-105%);opacity:.3}}
+.crosser{position:fixed;bottom:18px;left:0;width:84px;height:84px;z-index:6;pointer-events:none}
+.crosser svg{width:100%;height:100%;animation:float .5s ease-in-out infinite}
+.crosser.fwd{animation:crossFwd 1.1s cubic-bezier(.45,0,.3,1) forwards}
+.crosser.back{animation:crossBack 1.1s cubic-bezier(.45,0,.3,1) forwards}
+.crosser.back svg{scale:-1 1}
+@keyframes crossFwd{from{transform:translateX(-100px)}to{transform:translateX(calc(100vw + 20px))}}
+@keyframes crossBack{from{transform:translateX(calc(100vw + 20px))}to{transform:translateX(-100px)}}
+@media (max-width:560px){.maintitle{grid-template-columns:1fr}.maintitle svg.teacher{max-width:170px;margin-top:-10px}}
+.pic{font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;font-size:40px;line-height:1;display:inline-block}
+.pic.num{font-family:var(--eng);font-weight:700;font-size:24px;min-width:54px;height:54px;padding:0 8px;border-radius:999px;background:var(--duck);color:#4a2e1c;border:3px solid var(--ink);display:inline-grid;place-items:center}
+.pic.big{font-size:72px}
+.pic.num.big{font-size:34px;min-width:84px;height:84px}
+.pic.sm{font-size:30px}
+.pic.num.sm{font-size:18px;min-width:42px;height:42px}
+.chain .wbtn{flex-direction:column;gap:4px;padding:8px 14px}
+.pic.blank{width:40px;height:40px} .pic.blank.sm{width:42px;height:30px}
+.dlg{font-family:var(--eng);font-weight:700;font-size:clamp(26px,5.5vw,36px);line-height:1.45;display:grid;gap:4px}
+.dlg .sp{color:var(--muted);font-weight:400;margin-right:8px}
+.dlg .blank{display:inline-block;min-width:3.2em;border-bottom:4px solid var(--cat);margin:0 4px;text-align:center;color:var(--cat)}
+.dlg .fill{color:var(--cat);text-decoration:underline wavy;text-underline-offset:.18em}
+.dlg u{text-decoration:none;background:color-mix(in srgb,var(--duck) 55%,transparent);border-radius:6px;padding:0 4px}
+.gopts{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0 6px}
+.gopts .opt{flex:1 1 120px}
+.gopts .opt span{font-family:var(--eng);font-weight:700;font-size:clamp(28px,6vw,40px)}
+.gopts .opt span.k{font-family:var(--body);font-weight:400}
+.trans{font-size:22px;color:var(--muted);margin-top:8px}
+.ans .dlg{font-size:clamp(20px,4.5vw,26px);flex:1 1 220px}
+/* 레슨 화면 */
+.lesson{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;max-width:640px;margin:0 auto}
+.lh{display:flex;align-items:center;gap:14px;padding:14px 0 6px}
+.x{width:44px;height:44px;border:0;background:none;font-size:26px;color:var(--muted);flex:none}
+.pbar{flex:1;height:18px;border-radius:999px;background:color-mix(in srgb,var(--ink) 12%,transparent);overflow:hidden}
+.pbar i{display:block;height:100%;border-radius:999px;background:var(--cat);transition:width .5s ease}
+.ltag{font-family:var(--eng);font-weight:700;color:var(--cat);font-size:20px;min-width:28px;text-align:right}
+.lbody{flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px;padding:12px 0 24px}
+.kicker{margin:0;text-align:center;font-size:20px;font-weight:600;color:var(--muted)}
+.bigsound{text-align:center;font-family:var(--eng);font-weight:700;font-size:clamp(56px,14vw,104px);line-height:1;color:var(--cat)}
+.lead{margin:0;text-align:center;font-size:clamp(24px,5vw,30px);font-weight:700}
+.tip{display:flex;align-items:center;gap:10px;margin:0;font-size:19px;color:var(--muted)}
+.tip svg{width:36px;height:36px;flex:none}
+.lbody .chain{justify-content:center}
+.hear.big{width:96px;height:96px;align-self:center}
+.hear.big svg{width:46px;height:46px}
+.slowbtn{border:3px solid var(--line);background:var(--card);border-radius:999px;padding:8px 16px;font-weight:600;font-size:18px}
+.excard{align-self:center;display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--card);border:3px solid var(--line);border-radius:28px;padding:26px 34px;min-width:min(100%,360px)}
+.excard.left{align-items:flex-start}
+.excard .word{font-size:clamp(64px,17vw,110px)}
+.pic.huge{font-size:110px}
+.opts .opt.sel,.gopts .opt.sel{border-color:var(--cat);background:color-mix(in srgb,var(--cat) 14%,var(--card));box-shadow:0 0 0 4px color-mix(in srgb,var(--cat) 30%,transparent)}
+.lbody .boxes{justify-content:center}
+.lbody .word#model{font-size:clamp(48px,12vw,80px)}
+.lfoot{position:sticky;bottom:0;padding:16px 0 calc(16px + env(safe-area-inset-bottom));background:var(--paper);border-top:3px solid color-mix(in srgb,var(--ink) 10%,transparent);display:flex;flex-direction:column;gap:10px}
+.cta{width:100%;min-height:62px;border:0;border-radius:18px;background:var(--cat);color:#fff;font-family:var(--body);font-weight:700;font-size:24px;box-shadow:0 5px 0 color-mix(in srgb,var(--cat) 60%,#000);transition:transform .08s}
+.cta:active{transform:translateY(4px);box-shadow:0 1px 0 color-mix(in srgb,var(--cat) 60%,#000)}
+.cta.dim{background:color-mix(in srgb,var(--ink) 18%,var(--paper));color:var(--muted);box-shadow:0 5px 0 color-mix(in srgb,var(--ink) 25%,var(--paper))}
+.cta.shake{animation:oops .35s ease}
+.fbsheet{animation:sheetUp .28s cubic-bezier(.2,.8,.3,1)}
+.fbsheet.ok{background:color-mix(in srgb,var(--ok) 18%,var(--paper));border-top-color:var(--ok)}
+.fbsheet.no{background:color-mix(in srgb,var(--bad) 14%,var(--paper));border-top-color:var(--bad)}
+.fbsheet.ok .cta{background:var(--ok);box-shadow:0 5px 0 color-mix(in srgb,var(--ok) 60%,#000)}
+.fbsheet.no .cta{background:var(--bad);box-shadow:0 5px 0 color-mix(in srgb,var(--bad) 60%,#000)}
+.fbmsg{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;font-size:24px}
+.fbsheet.ok .fbmsg b{color:var(--ok)} .fbsheet.no .fbmsg b{color:var(--bad)}
+.fbword.word{font-size:34px}
+.fbword .dlg{font-size:22px}
+@keyframes sheetUp{from{transform:translateY(100%)}}
+.bigduck{width:130px;height:130px} .bigduck svg{width:100%;height:100%}
+.bigduck.yay svg{animation:yay .6s ease 3} .bigduck.oops svg{animation:oops .5s ease 2}
+.lesson.yay .pbar i{filter:brightness(1.1)}
+.donet{font-size:clamp(34px,8vw,48px);text-align:center}
+.linkbtn{align-self:center;border:0;background:none;color:var(--muted);font-weight:600;font-size:19px;text-decoration:underline;text-underline-offset:4px;padding:6px}
+.anslist{display:flex;flex-direction:column}
+.lesson .score{font-size:64px;text-align:center}
+.lesson .score span{font-size:32px}
+.lesson .sheet h3{font-size:22px}
+.sheetbg{position:fixed;inset:0;z-index:30;background:rgba(60,35,20,.35);display:flex;align-items:flex-end;justify-content:center;animation:fadeIn .2s ease}
+.ssheet{width:min(640px,100%);background:var(--card);border-radius:28px 28px 0 0;padding:22px 20px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;animation:sheetUp .3s cubic-bezier(.2,.8,.3,1)}
+.ssheet .no{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:var(--cat);color:#fff;font-family:var(--eng);font-weight:700;font-size:28px;flex:none}
+.sstitle{font-size:28px;font-weight:700}
+@keyframes fadeIn{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="crayon" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="5" result="w"/><feDisplacementMap in="SourceGraphic" in2="w" scale="6" result="d"/><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="4" result="g"/><feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.1 1.2" result="ga"/><feComposite in="d" in2="ga" operator="in"/></filter>
+  <filter id="wobble" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="7" result="w"/><feDisplacementMap in="SourceGraphic" in2="w" scale="3"/></filter>
+</svg>
+<main class="wrap" id="app"></main>
+
+<dialog id="nickDlg">
+  <div id="dlgDuck" style="width:110px;margin:-6px auto 0"></div>
+  <h2 id="dlgT"></h2>
+  <p style="margin:8px 0 0" id="dlgP"></p>
+  <div id="nickForm">
+    <input class="nick" id="nickIn" maxlength="6" autocomplete="off" aria-label="닉네임 (6글자까지)" placeholder="예: 수달왕">
+    <div class="err" id="nickErr" role="alert"></div>
+    <button class="btn" type="button" id="nickGo" style="width:100%"></button>
+  </div>
+</dialog>
+
+<script>
+"use strict";
+/* ================= 선생님 설정 =================
+   구글 Apps Script를 웹 앱으로 배포한 뒤 받은 주소를 아래 따옴표 안에 붙여 넣으세요.
+   비워 두면 기록을 보내지 않고 연습과 시험만 할 수 있어요. */
+const SCRIPT_URL = "";
+const PASS_RATE = 0.75;
+/* =============================================== */
+
+const DATA = {"parts": ["1부 자음 소리", "2부 짧은 모음", "3부 자음 이어 읽기", "4부 두 글자 한 소리", "5부 끝 e", "6부 모음 두 개와 열린 모음", "7부 모음 + r", "8부 그 밖의 모음", "9부 규칙 밖 단어와 긴 단어", "10부 숫자, 요일, 달"], "stages": [{"n": 1, "part": 0, "title": "b · d · p · t", "cat": "c", "sound": "b 브 · d 드 · p 프 · t 트", "intro": "첫소리를 잘 들어요", "pairs": [], "items": [["[b]at", "방망이, 박쥐", 1, "🦇"], ["[b]ig", "큰", 1, "🐘"], ["[b]ed", "침대", 1, "🛏️"], ["[b]ug", "벌레", 1, "🐛"], ["[d]ad", "아빠", 1, "👨"], ["[d]og", "개, 강아지", 1, "🐶"], ["[p]ig", "돼지", 1, "🐷"], ["[t]op", "꼭대기", 1, "🔝"]], "introEn": "Listen to the first sound.", "titleEn": "", "how": "입술을 붙였다 떼면 b·p, 혀끝을 윗니 뒤에 댔다 떼면 d·t", "howEn": "Lips pop for b and p. Tongue taps behind your teeth for d and t.", "goal": "b 브 · d 드 · p 프 · t 트 소리를 알아요", "goalEn": "I know the b · d · p · t sounds."}, {"n": 2, "part": 0, "title": "m · n · s · h · l · r", "cat": "c", "sound": "m 므 · n 느 · s 스 · h 흐 · l 르 · r 루", "intro": "첫소리를 길게: mmm-ap", "pairs": [], "items": [["[m]ap", "지도", 1, "🗺️"], ["[m]om", "엄마", 1, "👩"], ["[n]et", "그물", 1, "🥅"], ["[s]un", "태양", 1, "☀️"], ["[h]at", "모자", 1, "👒"], ["[h]it", "치다", 1, "🥊"], ["[l]eg", "다리", 1, "🦵"], ["[r]un", "달리다", 1, "🏃"]], "introEn": "Stretch the first sound: mmm-ap.", "titleEn": "", "how": "m은 입 다물고 음, s는 스-, l은 혀를 위로, r은 혀를 말아요", "howEn": "m hums, s hisses, l lifts your tongue, r curls it.", "goal": "m 므 · n 느 · s 스 · h 흐 · l 르 · r 루 소리를 알아요", "goalEn": "I know the m · n · s · h · l · r sounds."}, {"n": 3, "part": 0, "title": "c · k · g · j", "cat": "c", "sound": "c·k 크 · g 그 · j 쥐", "intro": "c와 k는 같은 '크'", "pairs": [], "items": [["[c]at", "고양이", 1, "🐱"], ["[c]ap", "모자", 1, "🧢"], ["[c]an", "~할 수 있다, 깡통", 1, "🥫"], ["[c]ut", "자르다", 1, "🔪"], ["[k]id", "아이", 0, "🧒"], ["[g]um", "껌", 0, "🫧"], ["[j]am", "잼", 0, "🍯"], ["[j]et", "제트기", 0, "✈️"]], "introEn": "c and k both say /k/.", "titleEn": "", "how": "c·k는 목 안쪽에서 크, j는 입술을 내밀고 쥐", "howEn": "c and k click in your throat. j pushes your lips out.", "goal": "c·k 크 · g 그 · j 쥐 소리를 알아요", "goalEn": "I know the c · k · g · j sounds."}, {"n": 4, "part": 0, "title": "f · v · w · y · x · z", "cat": "c", "sound": "f 프(바람) · v 브(떨림) · w 우 · y 이 · x 크스 · z 즈", "intro": "f는 바람, v는 떨림", "pairs": [["fan", "pan"], ["van", "bat"]], "items": [["[f]an", "선풍기", 1, "🪭"], ["[f]un", "재미, 즐거운", 1, "🎉"], ["[f]ox", "여우", 1, "🦊"], ["[p]an", "프라이팬", 0, "🍳"], ["[v]an", "승합차", 0, "🚐"], ["[w]eb", "거미줄", 0, "🕸️"], ["[y]es", "네", 0, "⭕"], ["[z]ip", "지퍼", 0, "🤐"]], "introEn": "f blows air, v buzzes.", "titleEn": "f · v · w · y · x · z", "how": "윗니로 아랫입술을 살짝 물고: f는 바람, v는 떨림", "howEn": "Bite your lip lightly: f blows, v buzzes.", "goal": "f 프(바람) · v 브(떨림) · w 우 · y 이 · x 크스 · z 즈 소리를 알아요", "goalEn": "I know the f · v · w · y · x · z sounds."}, {"n": 5, "part": 1, "title": "a 애", "cat": "s", "sound": "a 애", "intro": "a는 짧게 '애'", "pairs": [], "items": [["m[a]n", "남자, 사람", 1, "🧑"], ["s[a]d", "슬픈", 1, "😢"], ["b[a]d", "나쁜", 1, "👎"], ["h[a]m", "햄", 1, "🍖"], ["[a]t", "~에", 1, ""], ["b[a]t", "방망이, 박쥐", 1, "🦇"], ["c[a]t", "고양이", 1, "🐱"], ["m[a]p", "지도", 1, "🗺️"]], "introEn": "Short a says \"ae\".", "titleEn": "short a", "how": "입을 옆으로 크게 벌리고 짧게 '애'", "howEn": "Open wide and say a quick \"ae\".", "goal": "a 애 소리를 알아요", "goalEn": "I know the short a sound."}, {"n": 6, "part": 1, "title": "e 에", "cat": "s", "sound": "e 에", "intro": "e는 짧게 '에'", "pairs": [["red", "read"]], "items": [["r[e]d", "빨간색", 1, "🟥"], ["b[e]d", "침대", 1, "🛏️"], ["l[e]g", "다리", 1, "🦵"], ["n[e]t", "그물", 1, "🥅"], ["[e]gg", "계란", 1, "🥚"], ["p[e]n", "펜", 0, "🖊️"], ["t[e]n", "10", 1, "#10"], ["w[e]t", "젖은", 0, "💦"]], "introEn": "Short e says \"eh\".", "titleEn": "short e", "how": "입을 조금 벌리고 짧게 '에'", "howEn": "Open a little and say a quick \"eh\".", "goal": "e 에 소리를 알아요", "goalEn": "I know the short e sound."}, {"n": 7, "part": 1, "title": "i 이(짧게)", "cat": "s", "sound": "i 이", "intro": "i는 짧게 '이'", "pairs": [], "items": [["[i]t", "그것", 1, ""], ["[i]n", "안에", 1, ""], ["b[i]g", "큰", 1, "🐘"], ["p[i]g", "돼지", 1, "🐷"], ["s[i]t", "앉다", 1, "🧘"], ["h[i]t", "치다", 1, "🥊"], ["l[i]p", "입술", 1, "👄"], ["s[i]x", "6", 1, "#6"]], "introEn": "Short i says \"ih\".", "titleEn": "short i", "how": "입을 살짝 옆으로, 아주 짧게 '이'", "howEn": "Smile a little and say a quick \"ih\".", "goal": "i 이 소리를 알아요", "goalEn": "I know the short i sound."}, {"n": 8, "part": 1, "title": "o 아", "cat": "s", "sound": "o 아", "intro": "o는 짧게 '아'", "pairs": [], "items": [["d[o]g", "개, 강아지", 1, "🐶"], ["h[o]t", "뜨거운", 1, "🔥"], ["m[o]m", "엄마", 1, "👩"], ["n[o]t", "아니다", 1, ""], ["[o]n", "위에, ~에", 1, ""], ["t[o]p", "꼭대기", 1, "🔝"], ["f[o]x", "여우", 1, "🦊"], ["d[o]ll", "인형", 1, "🪆"]], "introEn": "Short o says \"ah\".", "titleEn": "short o", "how": "입을 둥글게 크게 벌리고 '아'", "howEn": "Open round and say \"ah\".", "goal": "o 아 소리를 알아요", "goalEn": "I know the short o sound."}, {"n": 9, "part": 1, "title": "u 어", "cat": "s", "sound": "u 어", "intro": "u는 짧게 '어'", "pairs": [["cut", "cute"]], "items": [["r[u]n", "달리다", 1, "🏃"], ["s[u]n", "태양", 1, "☀️"], ["[u]p", "위로", 1, "⬆️"], ["b[u]g", "벌레", 1, "🐛"], ["c[u]t", "자르다", 1, "🔪"], ["f[u]n", "재미, 즐거운", 1, "🎉"], ["c[u]p", "컵", 0, "🥤"], ["b[u]s", "버스", 0, "🚌"]], "introEn": "Short u says \"uh\".", "titleEn": "short u", "how": "입에 힘을 빼고 짧게 '어'", "howEn": "Relax your mouth and say \"uh\".", "goal": "u 어 소리를 알아요", "goalEn": "I know the short u sound."}, {"n": 10, "part": 2, "title": "앞에 붙는 짝 (cl, sw, st, fl, fr, dr)", "cat": "c", "sound": "cl · sw · st · fl · fr · dr", "intro": "앞의 두 자음, 둘 다 소리 내요", "pairs": [], "items": [["[cl]ass", "수업, 반", 1, "👥"], ["[sw]im", "수영, 수영하다", 1, "🏊"], ["[st]and", "일어서다", 1, "🧍"], ["[fl]ag", "깃발", 0, "🚩"], ["[fr]og", "개구리", 0, "🐸"], ["[dr]um", "북", 0, "🥁"], ["[st]op", "멈추다", 0, "🛑"], ["[st]ep", "걸음", 0, "👣"]], "introEn": "Say both letters: s-t-op.", "titleEn": "Blends at the start", "how": "두 소리를 빠르게 이어요: s + t → st", "howEn": "Blend two sounds fast: s + t → st.", "goal": "cl · sw · st · fl · fr · dr 소리를 알아요", "goalEn": "I know the Blends at the start sound."}, {"n": 11, "part": 2, "title": "끝에 붙는 짝 (nd, nt, st, mp, sk, lk, lp)", "cat": "c", "sound": "nd · nt · st · mp · sk · lk · lp", "intro": "끝의 두 자음, 끝까지 소리 내요", "pairs": [], "items": [["a[nd]", "그리고", 1, ""], ["a[nt]", "개미", 1, "🐜"], ["ha[nd]", "손", 1, "✋"], ["fa[st]", "빠른", 1, "💨"], ["ju[mp]", "뛰다", 1, "🦘"], ["de[sk]", "책상", 1, "🖥️"], ["mi[lk]", "우유", 1, "🥛"], ["he[lp]", "도와주다", 1, "🆘"]], "introEn": "Say both end sounds: ha-n-d.", "titleEn": "Blends at the end", "how": "마지막 두 소리를 꼭 내요: n + d → nd", "howEn": "Say both last sounds: n + d → nd.", "goal": "nd · nt · st · mp · sk · lk · lp 소리를 알아요", "goalEn": "I know the Blends at the end sound."}, {"n": 12, "part": 3, "title": "sh 쉬 · ch·tch 취", "cat": "d", "sound": "sh 쉬 · ch 취", "intro": "sh는 '쉬', ch는 '취'", "pairs": [], "items": [["fi[sh]", "물고기", 1, "🐟"], ["tra[sh]", "휴지통, 쓰레기", 1, "🗑️"], ["lun[ch]", "점심", 1, "🍱"], ["mu[ch]", "많이", 1, ""], ["ca[tch]", "잡다", 1, "🫴"], ["[sh]ip", "배", 0, "🚢"], ["[ch]in", "턱", 0, ""], ["di[sh]", "접시", 0, "🍽️"]], "introEn": "sh says \"sh\", ch says \"ch\".", "titleEn": "sh · ch", "how": "입술을 앞으로 내밀고 sh '쉬', ch '취'", "howEn": "Push your lips out for sh and ch.", "goal": "sh 쉬 · ch 취 소리를 알아요", "goalEn": "I know the sh · ch sounds."}, {"n": 13, "part": 3, "title": "th", "cat": "d", "sound": "th", "intro": "혀를 이 사이에 물고 th", "pairs": [["this", "thank"]], "items": [["[th]is", "이것", 1, ""], ["[th]at", "그것", 1, ""], ["[th]ank", "고맙다", 1, "🙏"], ["wi[th]", "~와 함께", 0, ""], ["ba[th]", "목욕", 0, "🛁"], ["ma[th]", "수학", 0, "➗"], ["[th]in", "얇은", 0, ""], ["[th]ree", "3", 1, "#3"]], "introEn": "Tongue between your teeth: th.", "titleEn": "th", "how": "혀끝을 이 사이로 살짝 내밀어요", "howEn": "Put your tongue tip between your teeth.", "goal": "th 소리를 알아요", "goalEn": "I know the th sound."}, {"n": 14, "part": 3, "title": "ck 크", "cat": "d", "sound": "ck 크", "intro": "짧은 모음 뒤 '크'는 ck", "pairs": [], "items": [["bla[ck]", "검은색", 1, "⬛"], ["du[ck]", "오리", 1, "🦆"], ["si[ck]", "아픈", 1, "🤒"], ["pi[ck]", "선택하다, 집다", 1, "🫳"], ["sti[ck]", "지팡이, 막대기", 1, "🪵"], ["so[ck]", "양말", 0, "🧦"], ["ne[ck]", "목", 0, ""], ["ba[ck]", "뒤", 0, ""]], "introEn": "After a short vowel, /k/ is ck.", "titleEn": "ck", "how": "c와 k가 만나도 '크' 한 번", "howEn": "c and k together make one /k/.", "goal": "ck 크 소리를 알아요", "goalEn": "I know the ck sound."}, {"n": 15, "part": 3, "title": "ng 응 · nk 응크", "cat": "d", "sound": "ng 응 · nk 응크", "intro": "ng는 '응', nk는 '응크'", "pairs": [["sing", "pink"]], "items": [["ki[ng]", "왕", 1, "🤴"], ["si[ng]", "노래부르다", 1, "🎤"], ["lo[ng]", "긴, 오랜", 1, "📏"], ["i[nk]", "잉크", 1, "🖋️"], ["pi[nk]", "핑크색, 분홍색", 1, "🩷"], ["ri[ng]", "반지", 0, "💍"], ["so[ng]", "노래", 0, "🎵"], ["ba[nk]", "은행", 0, "🏦"]], "introEn": "ng hums, nk adds /k/.", "titleEn": "ng · nk", "how": "ng는 코로 '응', nk는 '응' 뒤에 '크'", "howEn": "ng hums in your nose. nk adds /k/.", "goal": "ng 응 · nk 응크 소리를 알아요", "goalEn": "I know the ng · nk sounds."}, {"n": 16, "part": 4, "title": "a_e 에이", "cat": "l", "sound": "a_e 에이", "intro": "끝 e는 조용, a는 '에이'", "pairs": [["cap", "cape"], ["hat", "hate"]], "items": [["m[a]k(e)", "만들다", 1, ""], ["n[a]m(e)", "이름", 1, "📛"], ["l[a]t(e)", "늦은", 1, "⌛"], ["c[a]s(e)", "경우, 사례", 1, ""], ["sn[a]k(e)", "뱀", 1, "🐍"], ["v[a]s(e)", "꽃병", 1, "🏺"], ["c[a]k(e)", "케이크", 0, "🍰"], ["g[a]m(e)", "게임", 0, "🎮"]], "introEn": "Silent e: a says its name.", "titleEn": "a_e", "how": "a를 알파벳 이름처럼 길게 '에이'", "howEn": "Say a like its name: \"ay\".", "goal": "a_e 에이 소리를 알아요", "goalEn": "I know the a_e sound."}, {"n": 17, "part": 4, "title": "i_e 아이", "cat": "l", "sound": "i_e 아이", "intro": "끝 e는 조용, i는 '아이'", "pairs": [["kit", "kite"], ["pin", "pine"]], "items": [["l[i]k(e)", "좋아하다, ~처럼", 1, "❤️"], ["n[i]c(e)", "좋은", 1, "😊"], ["l[i]n(e)", "줄", 1, "➖"], ["t[i]m(e)", "시간", 1, "🕒"], ["wh[i]t(e)", "하얀색", 1, "⬜"], ["f[i]v(e)", "5", 1, "#5"], ["b[i]k(e)", "자전거", 0, "🚲"], ["k[i]t(e)", "연", 0, "🪁"]], "introEn": "Silent e: i says its name.", "titleEn": "i_e", "how": "i를 알파벳 이름처럼 길게 '아이'", "howEn": "Say i like its name: \"eye\".", "goal": "i_e 아이 소리를 알아요", "goalEn": "I know the i_e sound."}, {"n": 18, "part": 4, "title": "o_e 오우 · u_e 유", "cat": "l", "sound": "o_e 오우 · u_e 유", "intro": "끝 e는 조용, o는 '오우' u는 '유'", "pairs": [["cut", "cute"], ["hop", "hope"], ["not", "note"]], "items": [["n[o]s(e)", "코", 1, "👃"], ["cl[o]s(e)", "닫다", 1, ""], ["r[o]p(e)", "밧줄", 1, "🪢"], ["c[u]t(e)", "귀여운", 1, "🥰"], ["h[o]m(e)", "집", 0, "🏠"], ["b[o]n(e)", "뼈", 0, "🦴"], ["c[u]b(e)", "정육면체", 0, "🧊"], ["t[u]b(e)", "관", 0, "🧪"]], "introEn": "Silent e: o and u say their names.", "titleEn": "o_e · u_e", "how": "o는 '오우', u는 '유'로 길게", "howEn": "Say o as \"oh\" and u as \"you\".", "goal": "o_e 오우 · u_e 유 소리를 알아요", "goalEn": "I know the o_e · u_e sounds."}, {"n": 19, "part": 5, "title": "ee · ey · e_e 이", "cat": "l", "sound": "ee · ey 이", "intro": "ee, ey는 '이'", "pairs": [], "items": [["gr[ee]n", "초록색", 1, "🟩"], ["m[ee]t", "만나다", 1, "🤝"], ["qu[ee]n", "여왕", 1, "👸"], ["k[ey]", "열쇠, 핵심", 1, "🔑"], ["h[e]r(e)", "여기", 1, "📍"], ["tr[ee]", "나무", 0, "🌳"], ["s[ee]", "보다", 0, "👁️"], ["b[ee]", "벌", 0, "🐝"]], "introEn": "ee and ey say \"ee\".", "titleEn": "ee · ey · e_e", "how": "입을 옆으로 당기고 길게 '이-'", "howEn": "Smile wide and say a long \"ee\".", "goal": "ee · ey 이 소리를 알아요", "goalEn": "I know the ee · ey · e_e sounds."}, {"n": 20, "part": 5, "title": "ea 이", "cat": "l", "sound": "ea 이", "intro": "ea는 '이' (red → read)", "pairs": [["red", "read"]], "items": [["pl[ea]se", "제발, ~해주세요", 1, "🥺"], ["cl[ea]n", "청소하다, 깨끗한", 1, "🧹"], ["ch[ea]p", "싼", 1, "🏷️"], ["t[ea]cher", "선생님", 1, "🧑‍🏫"], ["r[ea]d", "읽다", 0, "📖"], ["[ea]t", "먹다", 0, "😋"], ["t[ea]", "차", 0, "🍵"], ["s[ea]", "바다", 0, "🌊"]], "introEn": "ea says \"ee\" (red → read).", "titleEn": "ea", "how": "짧은 '에'가 아니라 길게 '이-'", "howEn": "A long \"ee\", not a short \"eh\".", "goal": "ea 이 소리를 알아요", "goalEn": "I know the ea sound."}, {"n": 21, "part": 5, "title": "ai · ay 에이", "cat": "l", "sound": "ai · ay 에이", "intro": "ai, ay는 '에이'", "pairs": [], "items": [["r[ai]n", "비", 1, "🌧️"], ["pl[ay]", "놀다", 1, "🎈"], ["d[ay]", "하루, 날", 1, "🌞"], ["tod[ay]", "오늘", 1, "📅"], ["birthd[ay]", "생일", 1, "🎁"], ["tr[ai]n", "기차", 0, "🚆"], ["p[ai]nt", "칠하다", 0, "🎨"], ["gr[ay]", "회색", 0, "🩶"]], "introEn": "ai and ay say \"ay\".", "titleEn": "ai · ay", "how": "'에'에서 '이'로 미끄러지듯 '에이'", "howEn": "Slide from \"e\" to \"ee\": \"ay\".", "goal": "ai · ay 에이 소리를 알아요", "goalEn": "I know the ai · ay sounds."}, {"n": 22, "part": 5, "title": "oa · ow · old 오우", "cat": "l", "sound": "oa · ow · old 오우", "intro": "oa, ow는 '오우'", "pairs": [["not", "boat"]], "items": [["b[oa]t", "보트, 배", 1, "⛵"], ["sn[ow]", "눈", 1, "❄️"], ["wind[ow]", "창문", 1, "🪟"], ["yell[ow]", "노란색", 1, "🟨"], ["kn[ow]", "알다", 1, "💭"], ["c[o]ld", "추운", 1, "🥶"], ["[o]ld", "오래된", 1, "🏚️"], ["[o]ver", "위에", 1, ""]], "introEn": "oa and ow say \"oh\".", "titleEn": "oa · ow · old", "how": "입술을 동그랗게 '오우'", "howEn": "Round your lips: \"oh\".", "goal": "oa · ow · old 오우 소리를 알아요", "goalEn": "I know the oa · ow · old sounds."}, {"n": 23, "part": 5, "title": "모음으로 끝나는 짧은 단어 (이름 소리)", "cat": "l", "sound": "모음으로 끝나면 이름 소리", "intro": "모음으로 끝나면 이름 소리", "pairs": [], "items": [["g[o]", "가다", 1, "➡️"], ["n[o]", "아니다", 1, "🙅"], ["s[o]", "그래서", 1, ""], ["b[e]", "~이 있다, ~이다", 1, ""], ["h[e]", "그", 1, "🙋‍♂️"], ["sh[e]", "그녀", 1, "🙋‍♀️"], ["w[e]", "우리", 1, "👫"], ["[o]pen", "열다", 1, "🔓"]], "introEn": "A vowel at the end says its name.", "titleEn": "Vowels at the end", "how": "끝에 오는 모음은 이름처럼 길게", "howEn": "A vowel at the end is long.", "goal": "모음으로 끝나면 이름 소리 소리를 알아요", "goalEn": "I know the Vowels at the end sound."}, {"n": 24, "part": 5, "title": "igh · y · ie 아이", "cat": "l", "sound": "igh · y · ie 아이", "intro": "igh, y, ie는 '아이'", "pairs": [["fly", "happy"]], "items": [["n[i](gh)t", "밤", 1, "🌙"], ["fl[y]", "날다", 1, "🕊️"], ["t[i]r(e)d", "피곤한", 1, "😴"], ["qu[ie]t", "조용한", 1, "🤫"], ["sk[y]", "하늘", 0, "🌤️"], ["l[i](gh)t", "빛", 0, "💡"], ["h[i](gh)", "높은", 0, "🏔️"], ["p[ie]", "파이", 0, "🥧"]], "introEn": "igh, y and ie say \"eye\".", "titleEn": "igh · y · ie", "how": "'아'에서 '이'로 미끄러지듯 '아이'", "howEn": "Slide from \"ah\" to \"ee\": \"eye\".", "goal": "igh · y · ie 아이 소리를 알아요", "goalEn": "I know the igh · y · ie sounds."}, {"n": 25, "part": 5, "title": "끝 y · ie 이", "cat": "l", "sound": "끝 y · ie 이", "intro": "긴 단어 끝 y는 '이'", "pairs": [["fly", "happy"]], "items": [["happ[y]", "행복한", 1, "😄"], ["sorr[y]", "미안하다", 1, "🙇"], ["ver[y]", "매우", 1, ""], ["hungr[y]", "배고픈", 1, "🤤"], ["curr[y]", "카레", 1, "🍛"], ["cook[ie]", "쿠키", 1, "🍪"], ["cand[y]", "사탕", 0, "🍭"], ["pupp[y]", "강아지", 0, "🐕"]], "introEn": "y at the end of a long word says \"ee\".", "titleEn": "Final y · ie", "how": "단어 끝에서 짧고 밝게 '이'", "howEn": "End with a bright \"ee\".", "goal": "끝 y · ie 이 소리를 알아요", "goalEn": "I know the Final y · ie sounds."}, {"n": 26, "part": 6, "title": "ar 아r · or 오r", "cat": "r", "sound": "ar 아r · or 오r", "intro": "ar은 '아r', or은 '오r'", "pairs": [], "items": [["f[or]", "위한", 1, ""], ["m[or]ning", "아침", 1, "🌅"], ["[or]ange", "오렌지, 주황색", 1, "🍊"], ["c[ar]", "자동차", 0, "🚗"], ["st[ar]", "별", 0, "⭐"], ["p[ar]k", "공원", 0, "🏞️"], ["f[or]k", "포크", 0, "🍴"], ["h[or]se", "말", 0, "🐴"]], "introEn": "ar says \"ar\", or says \"or\".", "titleEn": "ar · or", "how": "혀를 뒤로 말면서 '아r', '오r'", "howEn": "Curl your tongue back: \"ar\", \"or\".", "goal": "ar 아r · or 오r 소리를 알아요", "goalEn": "I know the ar · or sounds."}, {"n": 27, "part": 6, "title": "er · ir · ur 어r", "cat": "r", "sound": "er · ir · ur 어r", "intro": "er, ir, ur은 모두 '어r'", "pairs": [], "items": [["sist[er]", "여동생, 자매", 1, "👭"], ["und[er]", "아래에", 1, ""], ["dinn[er]", "저녁식사", 1, "🍝"], ["rul[er]", "자", 1, "📏"], ["b[ir]d", "새", 1, "🐦"], ["sk[ir]t", "치마", 1, "👗"], ["p[ur]ple", "보라색", 1, "🟪"], ["n[ur]se", "간호사", 0, "💉"]], "introEn": "er, ir and ur sound the same.", "titleEn": "er · ir · ur", "how": "입에 힘을 빼고 혀를 말며 '어r'", "howEn": "Relax and curl your tongue: \"er\".", "goal": "er · ir · ur 어r 소리를 알아요", "goalEn": "I know the er · ir · ur sounds."}, {"n": 28, "part": 6, "title": "ear 이어 · ear·air 에어", "cat": "r", "sound": "ear 이어 · ear·air 에어", "intro": "ear는 '이어' 또는 '에어'", "pairs": [["year", "bear"]], "items": [["y[ear]", "년", 1, "🗓️"], ["b[ear]", "곰", 1, "🐻"], ["p[ear]", "배", 1, "🍐"], ["ch[air]", "의자", 1, "🪑"], ["[ear]", "귀", 0, "👂"], ["h[air]", "머리카락", 0, "💇"]], "introEn": "ear says \"eer\" or \"air\".", "titleEn": "ear · air", "how": "'이어'나 '에어' 끝에 혀를 말아요", "howEn": "Say \"eer\" or \"air\", then curl.", "goal": "ear 이어 · ear·air 에어 소리를 알아요", "goalEn": "I know the ear · air sounds."}, {"n": 29, "part": 7, "title": "oo 짧은 우 · oo·ue 긴 우", "cat": "o", "sound": "oo 우 · ue 우", "intro": "oo는 짧은 '우', 긴 '우'", "pairs": [["book", "school"]], "items": [["b[oo]k", "책", 1, "📚"], ["l[oo]k", "보다", 1, "👀"], ["c[oo]k", "요리하다", 1, "🧑‍🍳"], ["g[oo]d", "좋은", 1, "👍"], ["sch[oo]l", "학교", 1, "🏫"], ["r[oo]m", "방", 1, "🛋️"], ["bl[ue]", "파랑색", 1, "🟦"], ["gl[ue]", "풀", 1, "🧴"]], "introEn": "oo can be short or long.", "titleEn": "oo · ue", "how": "입술을 동그랗게 내밀고 '우'", "howEn": "Round your lips: \"oo\".", "goal": "oo 우 · ue 우 소리를 알아요", "goalEn": "I know the oo · ue sounds."}, {"n": 30, "part": 7, "title": "ou · ow 아우", "cat": "o", "sound": "ou · ow 아우", "intro": "ou, ow는 '아우'", "pairs": [["snow", "down"]], "items": [["ab[ou]t", "약, ~에 대해", 1, ""], ["s[ou]nd", "소리, 들리다", 1, "🔊"], ["[ou]tside", "밖에", 1, "🏕️"], ["cl[ou]dy", "흐린", 1, "☁️"], ["h[ow]", "어떻게", 1, ""], ["n[ow]", "지금", 1, "⏱️"], ["d[ow]n", "아래에", 1, "⬇️"], ["br[ow]n", "갈색", 1, "🟫"]], "introEn": "ou and ow say \"ow\".", "titleEn": "ou · ow", "how": "'아'에서 '우'로 미끄러지듯 '아우'", "howEn": "Slide from \"ah\" to \"oo\": \"ow\".", "goal": "ou · ow 아우 소리를 알아요", "goalEn": "I know the ou · ow sounds."}, {"n": 31, "part": 7, "title": "all 올 · oy 오이 · aw 오", "cat": "o", "sound": "all 올 · oy 오이 · aw 오", "intro": "all '올', oy '오이', aw '오'", "pairs": [], "items": [["b[all]", "공", 1, "🎾"], ["sm[all]", "작은", 1, "🐭"], ["t[all]", "큰", 1, "🦒"], ["b[oy]", "소년", 0, "👦"], ["t[oy]", "장난감", 0, "🧸"], ["s[aw]", "보았다", 0, ""], ["dr[aw]", "그리다", 0, "🖼️"], ["c[all]", "부르다", 0, "📞"]], "introEn": "all, oy, aw.", "titleEn": "all · oy · aw", "how": "입을 둥글게 '오', oy는 '오이'", "howEn": "Round your mouth for \"aw\". oy says \"oy\".", "goal": "all 올 · oy 오이 · aw 오 소리를 알아요", "goalEn": "I know the all · oy · aw sounds."}, {"n": 32, "part": 7, "title": "같은 글자, 다른 소리 (c ㅅ, ea 에)", "cat": "o", "sound": "c ㅅ · ea 에", "intro": "c 뒤에 e·i·y면 'ㅅ'", "pairs": [["cat", "city"], ["read", "ready"]], "items": [["dan[c]e", "춤추다, 춤", 1, "💃"], ["pen[c]il", "연필", 1, "✏️"], ["w[ea]ther", "날씨", 1, "🌦️"], ["r[ea]dy", "준비된", 1, "🏁"], ["br[ea]kfast", "아침식사", 1, "🥞"], ["[c]ity", "도시", 0, "🏙️"], ["h[ea]d", "머리", 0, "👤"], ["br[ea]d", "빵", 0, "🍞"]], "introEn": "c before e, i, y sounds like s.", "titleEn": "Same letters, new sounds", "how": "단어마다 c와 ea 소리를 귀 기울여 들어요", "howEn": "Listen to c and ea in each word.", "goal": "c ㅅ · ea 에 소리를 알아요", "goalEn": "I know the Same letters, new sounds sound."}, {"n": 33, "part": 8, "title": "눈으로 익히는 단어 1", "cat": "x", "sound": "통째로 익히기", "intro": "모양을 통째로 익혀요", "pairs": [], "items": [["do", "~하다", 1, ""], ["who", "누구", 1, ""], ["what", "무엇", 1, ""], ["where", "어디에", 1, ""], ["there", "거기", 1, ""], ["have", "가지다", 1, ""], ["come", "오다", 1, ""], ["some", "몇몇의", 1, ""]], "introEn": "Learn the whole shape.", "titleEn": "Tricky words 1", "how": "소리보다 모양! 천천히 보고 따라 써요", "howEn": "Look at the shape and copy it slowly.", "goal": "규칙 밖 단어의 모양을 익혀요", "goalEn": "I can spell tricky words."}, {"n": 34, "part": 8, "title": "눈으로 익히는 단어 2", "cat": "x", "sound": "통째로 익히기", "intro": "모양을 통째로 익혀요", "pairs": [], "items": [["son", "아들", 1, ""], ["color", "색깔", 1, "🌈"], ["glove", "장갑", 1, "🧤"], ["brother", "동생, 형제", 1, "👬"], ["father", "아빠", 1, "👨"], ["many", "많은", 1, ""], ["want", "원하다", 1, "🙋"], ["watch", "시계", 1, "⌚"]], "introEn": "Learn the whole shape.", "titleEn": "Tricky words 2", "how": "소리보다 모양! 천천히 보고 따라 써요", "howEn": "Look at the shape and copy it slowly.", "goal": "규칙 밖 단어의 모양을 익혀요", "goalEn": "I can spell tricky words."}, {"n": 35, "part": 8, "title": "눈으로 익히는 단어 3", "cat": "x", "sound": "통째로 익히기", "intro": "모양을 통째로 익혀요", "pairs": [], "items": [["wash", "씻다", 1, "🧼"], ["shoe", "구두, 신발", 1, "👟"], ["push", "밀다", 1, "🫸"], ["busy", "바쁜", 1, ""], ["sure", "물론, 확실", 1, "👌"], ["touch", "만지다", 1, "👆"], ["great", "훌륭한", 1, "🌟"], ["door", "문", 1, "🚪"]], "introEn": "Learn the whole shape.", "titleEn": "Tricky words 3", "how": "소리보다 모양! 천천히 보고 따라 써요", "howEn": "Look at the shape and copy it slowly.", "goal": "규칙 밖 단어의 모양을 익혀요", "goalEn": "I can spell tricky words."}, {"n": 36, "part": 8, "title": "두 낱말을 합친 단어", "cat": "y", "sound": "두 낱말 합치기", "intro": "두 낱말을 붙인 단어", "pairs": [], "items": [["good|bye", "안녕, 잘가", 1, "👋"], ["in|side", "안쪽", 1, ""], ["after|noon", "오후", 1, "🌇"], ["every|one", "모두", 1, "👨‍👩‍👧‍👦"], ["base|ball", "야구", 1, "⚾"], ["basket|ball", "농구", 1, "🏀"], ["home|work", "숙제", 1, "📝"], ["grand|father", "할아버지", 1, "👴"]], "introEn": "Two words in one.", "titleEn": "Compound words", "how": "앞 낱말 + 뒤 낱말로 나눠 들어요", "howEn": "First word + second word.", "goal": "긴 단어를 마디로 나눠 써요", "goalEn": "I can spell long words in parts."}, {"n": 37, "part": 8, "title": "긴 단어 1 (마디 나누어 쓰기)", "cat": "y", "sound": "마디 나누기", "intro": "마디로 나눠 써요: to·ma·to", "pairs": [], "items": [["ap|ple", "사과", 1, "🍎"], ["car|rot", "당근", 1, "🥕"], ["cray|on", "크레용", 1, "🖍️"], ["to|ma|to", "토마토", 1, "🍅"], ["po|ta|to", "감자", 1, "🥔"], ["ze|bra", "얼룩말", 1, "🦓"], ["um|brel|la", "우산", 1, "☂️"], ["e|ras|er", "지우개", 1, ""]], "introEn": "Write it in parts: to·ma·to.", "titleEn": "Long words 1", "how": "손뼉 치며 마디를 세요: to·ma·to 짝짝짝", "howEn": "Clap the parts: to-ma-to.", "goal": "긴 단어를 마디로 나눠 써요", "goalEn": "I can spell long words in parts."}, {"n": 38, "part": 8, "title": "긴 단어 2", "cat": "y", "sound": "마디 나누기", "intro": "마디로 나눠 써요", "pairs": [], "items": [["scis|sors", "가위", 1, "✂️"], ["dol|phin", "돌고래", 1, "🐬"], ["un|cle", "삼촌", 1, "🧔"], ["ta|ble", "테이블", 1, ""], ["eve|ning", "저녁", 1, "🌆"], ["doc|tor", "의사", 1, "🧑‍⚕️"]], "introEn": "Write it in parts.", "titleEn": "Long words 2", "how": "손뼉 치며 마디를 세요", "howEn": "Clap the parts.", "goal": "긴 단어를 마디로 나눠 써요", "goalEn": "I can spell long words in parts."}, {"n": 39, "part": 8, "title": "긴 단어 3", "cat": "y", "sound": "마디 나누기", "intro": "마디로 나눠 써요", "pairs": [], "items": [["soc|cer", "축구", 1, "⚽"], ["wel|come", "환영해", 1, "🤗"], ["hel|lo", "안녕", 1, "👋"], ["beau|ti|ful", "아름다운, 예쁜", 1, "🌸"], ["daugh|ter", "딸", 1, "👧"], ["wor|ry", "걱정하다", 1, "😟"], ["fire|fight|er", "소방관", 1, "🧑‍🚒"], ["dodge|ball", "피구", 1, "🏐"]], "introEn": "Write it in parts.", "titleEn": "Long words 3", "how": "손뼉 치며 마디를 세요", "howEn": "Clap the parts.", "goal": "긴 단어를 마디로 나눠 써요", "goalEn": "I can spell long words in parts."}, {"n": 40, "part": 9, "title": "숫자 1~8", "cat": "y", "sound": "숫자 1~8", "intro": "eight의 gh는 소리 없음", "pairs": [], "items": [["one", "1", 1, "#1"], ["two", "2", 1, "#2"], ["three", "3", 1, "#3"], ["four", "4", 1, "#4"], ["five", "5", 1, "#5"], ["six", "6", 1, "#6"], ["sev|en", "7", 1, "#7"], ["ei(gh)t", "8", 1, "#8"]], "introEn": "The gh in eight is silent.", "titleEn": "Numbers 1–8", "how": "손가락으로 세며 따라 말해요", "howEn": "Count on your fingers and say it.", "goal": "숫자 1~8 단어를 써요", "goalEn": "I can spell numbers 1–8."}, {"n": 41, "part": 9, "title": "숫자 9~50", "cat": "y", "sound": "숫자 9~50", "intro": "-ty는 십 단위 (four → forty)", "pairs": [["four", "forty"]], "items": [["nine", "9", 1, "#9"], ["ten", "10", 1, "#10"], ["e|lev|en", "11", 1, "#11"], ["twelve", "12", 1, "#12"], ["twen|ty", "20", 1, "#20"], ["thir|ty", "30", 1, "#30"], ["for|ty", "40", 1, "#40"], ["fif|ty", "50", 1, "#50"]], "introEn": "-ty means tens (four → forty).", "titleEn": "Numbers 9–50", "how": "-teen과 -ty를 잘 들어요", "howEn": "Listen for -teen and -ty.", "goal": "숫자 9~50 단어를 써요", "goalEn": "I can spell numbers 9–50."}, {"n": 42, "part": 9, "title": "숫자 60~1000", "cat": "y", "sound": "숫자 60~1000", "intro": "-ty는 십 단위", "pairs": [], "items": [["six|ty", "60", 1, "#60"], ["sev|en|ty", "70", 1, "#70"], ["ei(gh)|ty", "80", 1, "#80"], ["nine|ty", "90", 1, "#90"], ["hun|dred", "100", 1, "#100"], ["thou|sand", "1000", 1, "#1000"]], "introEn": "-ty means tens.", "titleEn": "Numbers 60–1000", "how": "-ty로 끝나는 소리를 잘 들어요", "howEn": "Listen for the -ty ending.", "goal": "숫자 60~1000 단어를 써요", "goalEn": "I can spell numbers 60–1000."}, {"n": 43, "part": 9, "title": "요일", "cat": "y", "sound": "요일", "intro": "모두 day로 끝나요", "pairs": [], "items": [["Sun|day", "일요일", 1, ""], ["Mon|day", "월요일", 1, ""], ["Tues|day", "화요일", 1, ""], ["We(d)nes|day", "수요일", 1, ""], ["Thurs|day", "목요일", 1, ""], ["Fri|day", "금요일", 1, ""], ["Sat|ur|day", "토요일", 1, ""]], "introEn": "They all end in day.", "titleEn": "Days of the week", "how": "day 앞부분이 요일마다 달라요", "howEn": "Listen to the part before day.", "goal": "요일 단어를 써요", "goalEn": "I can spell the days of the week."}, {"n": 44, "part": 9, "title": "1~6월", "cat": "y", "sound": "1~6월", "intro": "첫 글자는 대문자", "pairs": [], "items": [["Jan|u|ar|y", "1월", 1, ""], ["Feb|ru|ar|y", "2월", 1, ""], ["March", "3월", 1, ""], ["A|pril", "4월", 1, ""], ["May", "5월", 1, ""], ["June", "6월", 1, ""]], "introEn": "Start with a capital letter.", "titleEn": "January–June", "how": "손뼉 치며 마디를 세요: Jan·u·ar·y", "howEn": "Clap the parts: Jan-u-ar-y.", "goal": "1~6월 단어를 써요", "goalEn": "I can spell January–June."}, {"n": 45, "part": 9, "title": "7~12월", "cat": "y", "sound": "7~12월", "intro": "9~12월은 -ber로 끝나요", "pairs": [], "items": [["Ju|ly", "7월", 1, ""], ["Au|gust", "8월", 1, ""], ["Sep|tem|ber", "9월", 1, ""], ["Oc|to|ber", "10월", 1, ""], ["No|vem|ber", "11월", 1, ""], ["De|cem|ber", "12월", 1, ""]], "introEn": "September to December end in -ber.", "titleEn": "July–December", "how": "손뼉 치며 마디를 세요: Sep·tem·ber", "howEn": "Clap the parts: Sep-tem-ber.", "goal": "7~12월 단어를 써요", "goalEn": "I can spell July–December."}, {"title": "의문사", "titleEn": "Question words", "sound": "what · who · where · how", "goal": "알맞은 의문사를 골라요", "goalEn": "I can choose the right question word.", "intro": "무엇 what, 누구 who, 어디 where, 어떻게 how", "introEn": "what = thing, who = person, where = place, how = feeling", "how": "대답을 먼저 읽고 무엇을 묻는지 생각해요", "howEn": "Read the answer first. What is it about?", "items": [{"q": ["A: ___ is this?", "B: It's a book."], "a": "What", "alts": ["What"], "opts": ["What", "Who", "Where", "How"], "ko": "이것은 뭐야?"}, {"q": ["A: ___ is she?", "B: She is my sister."], "a": "Who", "alts": ["Who"], "opts": ["What", "Who", "Where", "How"], "ko": "그녀는 누구야?"}, {"q": ["A: ___ is my bag?", "B: It's under the desk."], "a": "Where", "alts": ["Where"], "opts": ["What", "Who", "Where", "How"], "ko": "내 가방은 어디 있어?"}, {"q": ["A: ___ are you?", "B: I'm happy."], "a": "How", "alts": ["How"], "opts": ["What", "Who", "Where", "How"], "ko": "기분이 어때?"}, {"q": ["A: ___ is your name?", "B: My name is Mina."], "a": "What", "alts": ["What"], "opts": ["What", "Who", "Where", "How"], "ko": "이름이 뭐야?"}, {"q": ["A: ___ is the cat?", "B: It's on the chair."], "a": "Where", "alts": ["Where"], "opts": ["What", "Who", "Where", "How"], "ko": "고양이는 어디 있어?"}, {"q": ["A: ___ is he?", "B: He is my teacher."], "a": "Who", "alts": ["Who"], "opts": ["What", "Who", "Where", "How"], "ko": "그는 누구야?"}, {"q": ["A: ___ is the weather?", "B: It's snowy."], "a": "How", "alts": ["How"], "opts": ["What", "Who", "Where", "How"], "ko": "날씨가 어때?"}], "n": 46, "part": 10, "cat": "g", "kind": "g", "pairs": []}, {"title": "a / an", "titleEn": "a / an", "sound": "a · an", "goal": "a와 an을 구분해요", "goalEn": "I can use a and an.", "intro": "모음 소리 앞에는 an, 그 밖에는 a", "introEn": "an before a vowel sound, a before others", "how": "뒤에 오는 단어의 첫소리를 들어요: an apple, a cat", "howEn": "Listen to the first sound: an apple, a cat.", "items": [{"q": ["It's ___ apple."], "a": "an", "alts": ["an"], "opts": ["a", "an"], "ko": "그것은 사과야."}, {"q": ["It's ___ cat."], "a": "a", "alts": ["a"], "opts": ["a", "an"], "ko": "그것은 고양이야."}, {"q": ["I have ___ egg."], "a": "an", "alts": ["an"], "opts": ["a", "an"], "ko": "나는 달걀이 있어."}, {"q": ["This is ___ pencil."], "a": "a", "alts": ["a"], "opts": ["a", "an"], "ko": "이것은 연필이야."}, {"q": ["I see ___ ant."], "a": "an", "alts": ["an"], "opts": ["a", "an"], "ko": "개미가 보여."}, {"q": ["It's ___ umbrella."], "a": "an", "alts": ["an"], "opts": ["a", "an"], "ko": "그것은 우산이야."}, {"q": ["She has ___ dog."], "a": "a", "alts": ["a"], "opts": ["a", "an"], "ko": "그녀는 개가 있어."}, {"q": ["I want ___ orange."], "a": "an", "alts": ["an"], "opts": ["a", "an"], "ko": "나는 오렌지를 원해."}], "n": 47, "part": 10, "cat": "g", "kind": "g", "pairs": []}, {"title": "여럿이면 -s, -es", "titleEn": "Plurals -s / -es", "sound": "-s · -es", "goal": "여럿일 때 단어를 바꿔 써요", "goalEn": "I can write plurals.", "intro": "둘 이상이면 -s, x·sh·ch·s로 끝나면 -es", "introEn": "Add -s. After x, sh, ch, s add -es.", "how": "숫자를 보고 몇 개인지 먼저 세요", "howEn": "Look at the number first.", "items": [{"q": ["I have two ___. (cat)"], "a": "cats", "alts": ["cats"], "opts": ["cat", "cats", "cates"], "ko": "나는 고양이가 두 마리 있어."}, {"q": ["I see three ___. (box)"], "a": "boxes", "alts": ["boxes"], "opts": ["box", "boxs", "boxes"], "ko": "상자 세 개가 보여."}, {"q": ["There are four ___. (dog)"], "a": "dogs", "alts": ["dogs"], "opts": ["dog", "dogs", "doges"], "ko": "개가 네 마리 있어."}, {"q": ["Look at the two ___. (fox)"], "a": "foxes", "alts": ["foxes"], "opts": ["fox", "foxs", "foxes"], "ko": "여우 두 마리를 봐."}, {"q": ["I want five ___. (apple)"], "a": "apples", "alts": ["apples"], "opts": ["apple", "apples", "applees"], "ko": "사과 다섯 개를 원해."}, {"q": ["Wash the two ___. (dish)"], "a": "dishes", "alts": ["dishes"], "opts": ["dish", "dishs", "dishes"], "ko": "접시 두 개를 씻어."}, {"q": ["I see three ___. (bus)"], "a": "buses", "alts": ["buses"], "opts": ["bus", "buss", "buses"], "ko": "버스 세 대가 보여."}, {"q": ["I have six ___. (pencil)"], "a": "pencils", "alts": ["pencils"], "opts": ["pencil", "pencils", "pencilles"], "ko": "나는 연필이 여섯 자루 있어."}], "n": 48, "part": 10, "cat": "g", "kind": "g", "pairs": []}, {"title": "am / is / are", "titleEn": "am / is / are", "sound": "am · is · are", "goal": "am, is, are를 골라 써요", "goalEn": "I can use am, is and are.", "intro": "I는 am, 한 명·하나는 is, 여럿·you는 are", "introEn": "I am, he/she/it is, we/you/they are", "how": "문장 맨 앞의 주인공을 먼저 봐요", "howEn": "Look at who comes first.", "items": [{"q": ["I ___ happy."], "a": "am", "alts": ["am"], "opts": ["am", "is", "are"], "ko": "나는 행복해."}, {"q": ["She ___ my mom."], "a": "is", "alts": ["is"], "opts": ["am", "is", "are"], "ko": "그녀는 우리 엄마야."}, {"q": ["We ___ friends."], "a": "are", "alts": ["are"], "opts": ["am", "is", "are"], "ko": "우리는 친구야."}, {"q": ["It ___ a cat."], "a": "is", "alts": ["is"], "opts": ["am", "is", "are"], "ko": "그것은 고양이야."}, {"q": ["You ___ tall."], "a": "are", "alts": ["are"], "opts": ["am", "is", "are"], "ko": "너는 키가 커."}, {"q": ["He ___ sick."], "a": "is", "alts": ["is"], "opts": ["am", "is", "are"], "ko": "그는 아파."}, {"q": ["They ___ dogs."], "a": "are", "alts": ["are"], "opts": ["am", "is", "are"], "ko": "그것들은 개야."}, {"q": ["I ___ ten years old."], "a": "am", "alts": ["am"], "opts": ["am", "is", "are"], "ko": "나는 열 살이야."}], "n": 49, "part": 10, "cat": "g", "kind": "g", "pairs": []}, {"title": "he / she / it / they", "titleEn": "he / she / it / they", "sound": "he · she · it · they", "goal": "사람과 물건을 가리키는 말을 골라요", "goalEn": "I can choose he, she, it or they.", "intro": "남자 he, 여자 she, 동물·물건 it, 여럿 they", "introEn": "boy he, girl she, thing it, many they", "how": "앞 문장에 나온 사람이나 물건을 찾아요", "howEn": "Find who or what the first sentence talks about.", "items": [{"q": ["This is my dad.", "___ is tall."], "a": "He", "alts": ["He"], "opts": ["He", "She", "It", "They"], "ko": "이분은 우리 아빠야. 그는 키가 커."}, {"q": ["This is my sister.", "___ is cute."], "a": "She", "alts": ["She"], "opts": ["He", "She", "It", "They"], "ko": "이 아이는 내 여동생이야. 그녀는 귀여워."}, {"q": ["Look at the cat.", "___ is small."], "a": "It", "alts": ["It"], "opts": ["He", "She", "It", "They"], "ko": "고양이를 봐. 그것은 작아."}, {"q": ["Mina and Jinu are my friends.", "___ are happy."], "a": "They", "alts": ["They"], "opts": ["He", "She", "It", "They"], "ko": "미나와 진우는 내 친구야. 그들은 행복해."}, {"q": ["This is my mom.", "___ is a doctor."], "a": "She", "alts": ["She"], "opts": ["He", "She", "It", "They"], "ko": "이분은 우리 엄마야. 그녀는 의사야."}, {"q": ["I have a bag.", "___ is blue."], "a": "It", "alts": ["It"], "opts": ["He", "She", "It", "They"], "ko": "나는 가방이 있어. 그것은 파란색이야."}, {"q": ["This is my uncle.", "___ is a firefighter."], "a": "He", "alts": ["He"], "opts": ["He", "She", "It", "They"], "ko": "이분은 우리 삼촌이야. 그는 소방관이야."}, {"q": ["I see two birds.", "___ are yellow."], "a": "They", "alts": ["They"], "opts": ["He", "She", "It", "They"], "ko": "새 두 마리가 보여. 그것들은 노란색이야."}], "n": 50, "part": 10, "cat": "g", "kind": "g", "pairs": []}, {"title": "can / can't", "titleEn": "can / can't", "sound": "can · can't", "goal": "할 수 있다, 없다를 말해요", "goalEn": "I can use can and can't.", "intro": "할 수 있으면 can, 할 수 없으면 can't", "introEn": "can = able, can't = not able", "how": "그 동물이나 사람이 정말 할 수 있는지 생각해요", "howEn": "Think: can it really do that?", "items": [{"q": ["A: Can you swim?", "B: Yes, I ___."], "a": "can", "alts": ["can"], "opts": ["can", "can't"], "ko": "너 수영할 수 있어? 응, 할 수 있어."}, {"q": ["A: Can a fish fly?", "B: No, it ___."], "a": "can't", "alts": ["can't", "cannot"], "opts": ["can", "can't"], "ko": "물고기는 날 수 있어? 아니, 못 해."}, {"q": ["A bird ___ fly."], "a": "can", "alts": ["can"], "opts": ["can", "can't"], "ko": "새는 날 수 있어."}, {"q": ["A dog ___ read."], "a": "can't", "alts": ["can't", "cannot"], "opts": ["can", "can't"], "ko": "개는 읽을 수 없어."}, {"q": ["A duck ___ swim."], "a": "can", "alts": ["can"], "opts": ["can", "can't"], "ko": "오리는 수영할 수 있어."}, {"q": ["A cat ___ sing."], "a": "can't", "alts": ["can't", "cannot"], "opts": ["can", "can't"], "ko": "고양이는 노래할 수 없어."}, {"q": ["A: ___ you dance?", "B: Yes, I can."], "a": "Can", "alts": ["Can"], "opts": ["Can", "Can't"], "ko": "너 춤출 수 있어? 응, 할 수 있어."}, {"q": ["A rabbit ___ jump."], "a": "can", "alts": ["can"], "opts": ["can", "can't"], "ko": "토끼는 뛸 수 있어."}], "n": 51, "part": 10, "cat": "g", "kind": "g", "pairs": []}, {"title": "in / on / under", "titleEn": "in / on / under", "sound": "in · on · under", "goal": "위치를 나타내는 말을 골라요", "goalEn": "I can use in, on and under.", "intro": "안에 in, 위에 on, 아래에 under", "introEn": "in = inside, on = on top, under = below", "how": "look down, open, top 같은 힌트를 찾아요", "howEn": "Find clue words like look down, open, top.", "items": [{"q": ["Open the bag.", "The pen is ___ the bag."], "a": "in", "alts": ["in"], "opts": ["in", "on", "under"], "ko": "가방을 열어 봐. 펜은 가방 안에 있어."}, {"q": ["Look down.", "The dog is ___ the table."], "a": "under", "alts": ["under"], "opts": ["in", "on", "under"], "ko": "아래를 봐. 개는 탁자 아래에 있어."}, {"q": ["Look at the top of the desk.", "The book is ___ the desk."], "a": "on", "alts": ["on"], "opts": ["in", "on", "under"], "ko": "책상 위를 봐. 책은 책상 위에 있어."}, {"q": ["Open the box.", "The doll is ___ the box."], "a": "in", "alts": ["in"], "opts": ["in", "on", "under"], "ko": "상자를 열어 봐. 인형은 상자 안에 있어."}, {"q": ["Look down.", "My shoe is ___ the bed."], "a": "under", "alts": ["under"], "opts": ["in", "on", "under"], "ko": "아래를 봐. 내 신발은 침대 아래에 있어."}, {"q": ["Look up at the top.", "The cat is ___ the chair."], "a": "on", "alts": ["on"], "opts": ["in", "on", "under"], "ko": "위를 봐. 고양이는 의자 위에 있어."}, {"q": ["Look in the room.", "Mom is ___ the room."], "a": "in", "alts": ["in"], "opts": ["in", "on", "under"], "ko": "방 안을 봐. 엄마는 방 안에 있어."}, {"q": ["It's raining.", "Stand ___ the umbrella."], "a": "under", "alts": ["under"], "opts": ["in", "on", "under"], "ko": "비가 와. 우산 아래에 서."}], "n": 52, "part": 10, "cat": "g", "kind": "g", "pairs": []}, {"title": "뜻 짐작하기", "titleEn": "Guess the meaning", "sound": "?", "goal": "문장을 읽고 단어의 뜻을 짐작해요", "goalEn": "I can guess a word from the sentence.", "intro": "모르는 단어는 앞뒤 문장에서 힌트를 찾아요", "introEn": "Use the other sentences as clues.", "how": "노란 단어 말고 나머지 문장을 먼저 읽어요", "howEn": "Read the other words first.", "items": [{"q": ["A: I'm so *tired*.", "B: Go to bed."], "a": "피곤한", "alts": ["피곤한"], "opts": ["피곤한", "배고픈", "행복한"], "ko": "tired"}, {"q": ["It's *cloudy*.", "I can't see the sun."], "a": "흐린", "alts": ["흐린"], "opts": ["흐린", "맑은", "더운"], "ko": "cloudy"}, {"q": ["Shh! Be *quiet* in class."], "a": "조용한", "alts": ["조용한"], "opts": ["조용한", "시끄러운", "빠른"], "ko": "quiet"}, {"q": ["A: Can you play?", "B: Sorry, I'm *busy*. I have homework."], "a": "바쁜", "alts": ["바쁜"], "opts": ["바쁜", "심심한", "아픈"], "ko": "busy"}, {"q": ["It's one hundred won.", "It's *cheap*!"], "a": "싼", "alts": ["싼"], "opts": ["싼", "비싼", "큰"], "ko": "cheap"}, {"q": ["It's nine o'clock!", "Oh no, I'm *late* for school."], "a": "늦은", "alts": ["늦은"], "opts": ["늦은", "이른", "작은"], "ko": "late"}, {"q": ["A: Are you *ready*?", "B: Yes! Let's go."], "a": "준비된", "alts": ["준비된"], "opts": ["준비된", "슬픈", "늦은"], "ko": "ready"}, {"q": ["Don't *worry*.", "You can do it!"], "a": "걱정하다", "alts": ["걱정하다"], "opts": ["걱정하다", "웃다", "뛰다"], "ko": "worry"}], "n": 53, "part": 10, "cat": "g", "kind": "m", "pairs": []}], "chapters": [["자음 마을", "Consonant Village", "알에서 깨어나요", "Hatching from the egg"], ["짧은 모음 강", "Short Vowel River", "처음 헤엄쳐요", "First swim"], ["이어 읽기 다리", "Blend Bridge", "다리를 건너요", "Crossing the bridge"], ["두 글자 숲", "Two-Letter Forest", "친구를 만나요", "Meeting friends"], ["끝 e 언덕", "Magic e Hill", "언덕을 올라요", "Climbing the hill"], ["긴 모음 호수", "Long Vowel Lake", "호수를 건너요", "Crossing the lake"], ["r 동굴", "R Cave", "동굴을 지나요", "Through the cave"], ["알쏭달쏭 섬", "Odd Vowel Island", "섬을 탐험해요", "Exploring the island"], ["긴 단어 폭포", "Long Word Falls", "폭포를 넘어요", "Over the falls"], ["숫자와 달력 마을", "Numbers and Days Town", "다 자란 오리", "A grown-up duck"], ["문장 탐정 섬", "Sentence Detective Island", "탐정이 돼요", "Becoming a detective"]]};
+let LANG = (() => { try { return localStorage.getItem("duck3.lang") || "ko"; } catch (e) { return "ko"; } })();
+const L = (ko, en) => LANG === "en" ? en : ko;
+const T = s => L(s.title, s.titleEn || s.title);
+
+/* ---------- 기기에 남기는 것 ---------- */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem("duck3." + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem("duck3." + k, JSON.stringify(v)); } catch (e) {} }
+};
+let nick = store.get("nick", "");
+let dev = store.get("dev", "");
+if (!dev) { dev = Math.random().toString(36).slice(2, 6); store.set("dev", dev); }
+let passed = store.get("passed", {});
+let duckAt = store.get("duckAt", 1);
+
+/* ---------- 그림 (직접 그린 오리들) ---------- */
+const BABY = '<svg viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#wobble)"><path d="M12 66c0-16 14-24 30-24 10 0 16-6 16-14 0-12 9-20 20-20s19 9 18 20c-1 8-6 13-12 15 3 5 4 10 3 15-3 18-20 28-40 28S12 82 12 66z" fill="#ffd43d" stroke="#4a2e1c" stroke-width="4.5" stroke-linejoin="round"/><path d="M84 30c6 0 11 2 13 5-3 3-8 5-13 4" fill="#ff7a1a" stroke="#4a2e1c" stroke-width="3.5" stroke-linejoin="round"/><circle cx="75" cy="22" r="4.4" fill="#4a2e1c"/><path d="M22 62c8-2 18 0 22 8-8 5-18 4-24-2" fill="#f5b51c" stroke="#4a2e1c" stroke-width="3.5" stroke-linejoin="round"/><circle cx="64" cy="33" r="4.5" fill="#ff9e8a"/></g></svg>';
+const TEACHER = '<svg class="teacher" viewBox="0 0 270 250" aria-hidden="true"><g filter="url(#wobble)"><path d="M10 240c-10-40 40-60 110-60s140 20 130 60z" fill="#b08a6a" stroke="#4a2e1c" stroke-width="5"/><path d="M60 170c0-34 26-56 64-56 10-32 34-52 62-48 28 4 42 30 36 58-4 18-18 30-32 34 8 28-14 52-64 54-42 2-66-14-66-42z" fill="#fffaf2" stroke="#4a2e1c" stroke-width="5" stroke-linejoin="round"/><path d="M218 110c16-2 28 2 34 10-8 8-24 10-36 6" fill="#ff7a1a" stroke="#4a2e1c" stroke-width="4" stroke-linejoin="round"/><circle cx="186" cy="98" r="14" fill="none" stroke="#4a2e1c" stroke-width="4"/><circle cx="212" cy="96" r="12" fill="none" stroke="#4a2e1c" stroke-width="4"/><circle cx="188" cy="98" r="4.5" fill="#4a2e1c"/><path d="M80 150l50-14 50 14-50 34z" fill="#2368d8" stroke="#4a2e1c" stroke-width="4" stroke-linejoin="round"/><path d="M130 136v48" stroke="#4a2e1c" stroke-width="3"/><circle cx="56" cy="40" r="30" fill="#ff9a3c" stroke="#e8661c" stroke-width="6"/></g></svg>';
+const GROW = [[0, "알", "an egg"], [1, "병아리", "a chick"], [11, "아기 오리", "a baby duck"], [26, "멋쟁이 오리", "a fine young duck"], [45, "다 자란 오리", "a grown-up duck"], [53, "탐정 오리", "a detective duck"]];
+function growth() { const n = Object.keys(passed).length; let g = GROW[0]; for (const x of GROW) if (n >= x[0]) g = x; return {n, ko: g[1], en: g[2]}; }
+
+/* ---------- 단어 표시 ---------- */
+const plain = m => m.replace(/[\[\]\(\)|]/g, "");
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function parse(m) {
+  const out = []; let k = "", gap = false;
+  for (const ch of m) {
+    if (ch === "[") k = "hit"; else if (ch === "]") k = "";
+    else if (ch === "(") k = "sil"; else if (ch === ")") k = "";
+    else if (ch === "|") gap = true;
+    else { out.push({ch, k, gap}); gap = false; }
+  }
+  return out;
+}
+const picHTML = (p, cls, keep) => !p ? (keep ? `<span class="pic blank ${cls || ""}" aria-hidden="true"></span>` : "") : p[0] === "#" ? `<span class="pic num ${cls || ""}" aria-hidden="true">${p.slice(1)}</span>` : `<span class="pic ${cls || ""}" aria-hidden="true">${p}</span>`;
+const isG = s => s.cat === "g";
+function dlgHTML(it, mode) {
+  return `<div class="dlg">${it.q.map(line => {
+    let sp = "", t = line; const m = /^([AB]):\s*/.exec(t); if (m) { sp = m[1]; t = t.slice(m[0].length); }
+    t = esc(t).replace(/\*([^*]+)\*/g, "<u>$1</u>").replace("___", mode === "fill" ? `<span class="fill">${esc(it.a)}</span>` : `<span class="blank">${mode === "num" ? "?" : "&nbsp;"}</span>`);
+    return `<div>${sp ? `<span class="sp">${sp}</span>` : ""}${t}</div>`;
+  }).join("")}</div>`;
+}
+const gSay = (it, filled) => it.q.map(l => l.replace(/^[AB]:\s*/, "").replace(/\*/g, "").replace("___", filled ? it.a : "...")).join(" ");
+const audio = it => it.q ? gSay(it, false) : plain(it[0]);
+const answerOf = it => it.q ? it.a : plain(it[0]);
+const wordHTML = m => parse(m).map(c => (c.gap ? '<span class="gap"></span>' : "") + (c.k ? `<span class="${c.k}">${esc(c.ch)}</span>` : esc(c.ch))).join("");
+
+/* ---------- 소리 ---------- */
+const canSpeak = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+let voice = null, curU = null, chainId = 0;
+function pickVoice() {
+  try { const v = speechSynthesis.getVoices(); voice = v.find(x => /^en[-_]US/i.test(x.lang) && x.localService) || v.find(x => /^en[-_]US/i.test(x.lang)) || v.find(x => /^en/i.test(x.lang)) || null; } catch (e) {}
+}
+if (canSpeak) { pickVoice(); try { speechSynthesis.addEventListener("voiceschanged", pickVoice); } catch (e) { speechSynthesis.onvoiceschanged = pickVoice; } }
+function utter(text, rate) {
+  const u = new SpeechSynthesisUtterance(text); u.lang = "en-US"; if (voice) u.voice = voice; u.rate = rate; u.volume = 1;
+  u.onerror = ev => { if (ev.error !== "interrupted" && ev.error !== "canceled") soundTrouble(); };
+  curU = u; /* 전역에 잡아 두어야 일부 크롬에서 소리가 중간에 끊기지 않는다 */
+  return u;
+}
+function speakNow(u) {
+  try {
+    if (speechSynthesis.speaking || speechSynthesis.pending) speechSynthesis.cancel();
+    if (speechSynthesis.paused) speechSynthesis.resume();
+    setTimeout(() => { try { speechSynthesis.speak(u); } catch (e) { soundTrouble(); } }, 60);
+  } catch (e) { soundTrouble(); }
+}
+function say(text, slow) { chainId++; if (!canSpeak) { soundTrouble(); return; } speakNow(utter(text, slow ? 0.5 : 0.8)); }
+function sayChain(words, onWord) {
+  const id = ++chainId;
+  if (!canSpeak) { soundTrouble(); onWord(-1); return; }
+  const step = i => {
+    if (id !== chainId) return;
+    if (i >= words.length) { onWord(-1); return; }
+    const u = utter(words[i], 0.6);
+    u.onstart = () => onWord(i);
+    u.onend = () => setTimeout(() => step(i + 1), 450);
+    if (i === 0) speakNow(u); else speechSynthesis.speak(u);
+  };
+  step(0);
+}
+let troubleShown = false;
+function soundTrouble() {
+  if (troubleShown) return; troubleShown = true;
+  const t = document.createElement("div"); t.className = "toast"; t.setAttribute("role", "alert");
+  t.textContent = L("소리가 나지 않아요. 기기 소리를 켜고, 크롬이나 사파리에서 열어 보세요.", "No sound. Turn up the volume and open this page in Chrome or Safari.");
+  document.body.appendChild(t); setTimeout(() => { t.remove(); troubleShown = false; }, 6000);
+}
+const ICON_MOUTH = '<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="var(--duck)" stroke="var(--ink)" stroke-width="3"/><circle cx="16" cy="18" r="2.6" fill="var(--ink)"/><circle cx="32" cy="18" r="2.6" fill="var(--ink)"/><ellipse cx="24" cy="32" rx="8" ry="5.5" fill="#ff7a1a" stroke="var(--ink)" stroke-width="2.5"/></svg>';
+const ICON_HEAR = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+
+/* ---------- 기록 보내기 ---------- */
+async function post(rec) { await fetch(SCRIPT_URL, {method: "POST", mode: "no-cors", headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify(rec)}); }
+async function sendRecord(rec) {
+  if (!SCRIPT_URL) return "off";
+  try { await post(rec); return "sent"; }
+  catch (e) { const q = store.get("queue", []); q.push(rec); store.set("queue", q.slice(-50)); return "queued"; }
+}
+async function flushQueue() {
+  if (!SCRIPT_URL) return;
+  const q = store.get("queue", []), left = [];
+  for (const r of q) { try { await post(r); } catch (e) { left.push(r); } }
+  store.set("queue", left);
+}
+
+/* ---------- 표지 + 강물 + 차례 ---------- */
+const app = document.getElementById("app");
+let S = null, swimming = false;
+const STEP = 150, X0 = 150;
+const fx = n => X0 + (n - 1) * STEP;
+function topBar(small, backMain) {
+  return `<div class="bar">${backMain ? `<button class="back" data-act="main" aria-label="${L("처음 화면으로", "Back to the start")}">←</button>` : small ? "" : `<div class="book">${BABY}</div>`}<span style="margin-right:auto"></span>
+    <button class="chip" data-act="lang" aria-label="${L("영어로 보기", "Show in Korean")}">${L("EN", "한글")}</button>
+    <button class="chip" data-act="nick" aria-label="${L("닉네임 바꾸기", "Change nickname")}">${esc(nick || L("이름표", "Name tag"))}</button></div>`;
+}
+function riverSVG(W) {
+  let waves = "", reeds = "";
+  for (let x = 40; x < W; x += 210) waves += `<path d="M${x} ${232 + (x % 3) * 18}q30-12 60 0t60 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>`;
+  for (let x = 90; x < W; x += 330) reeds += `<g transform="translate(${x} 150)"><path d="M0 0v-60M14 0v-44M-12 0v-38" stroke="var(--grassline)" stroke-width="6" stroke-linecap="round"/><ellipse cx="0" cy="-66" rx="7" ry="16" fill="#8a5a2b"/></g>`;
+  let hill = `M0 128`; for (let x = 0; x <= W; x += 240) hill += ` q60 ${x % 480 ? 22 : -26} 120 0 t120 0`;
+  return `<svg class="bg" width="${W}" height="330" aria-hidden="true"><g filter="url(#crayon)">
+    <rect width="${W}" height="60" fill="var(--sky1)"/><rect y="60" width="${W}" height="40" fill="var(--sky2)"/><rect y="100" width="${W}" height="40" fill="var(--sky3)"/>
+    <path d="${hill} V170 H0z" fill="var(--grass)" stroke="var(--grassline)" stroke-width="6"/>
+    <rect y="168" width="${W}" height="122" fill="var(--water)"/>
+    <path d="M0 170 ${Array.from({length: Math.ceil(W / 120) + 1}, (_, i) => `q30 10 60 0 t60 0`).join(" ")}" fill="none" stroke="var(--waterline)" stroke-width="7" stroke-linecap="round"/>
+    ${waves}<rect y="288" width="${W}" height="42" fill="var(--sand)"/>${reeds}</g></svg>`;
+}
+/* 메인: 제목, 별명, 최근 진도 */
+function nextStage() { return DATA.stages.find(s => !passed[s.n]) || DATA.stages[DATA.stages.length - 1]; }
+function viewMain() {
+  S = null; PAGE = "main"; app.style.removeProperty("--cat");
+  const next = nextStage(), g = growth(), done = Object.keys(passed).length, total = DATA.stages.length;
+  const last = store.get("last", null), ls = last && DATA.stages.find(s => s.n === last.n);
+  app.innerHTML = topBar() + `
+  <section class="main">
+    <div class="maintitle">
+      <h1 lang="en">Baby Duck's<br>English Adventure</h1>
+      ${TEACHER}
+    </div>
+    <div class="paperbox me">
+      <div class="who"><span class="meduck">${BABY}</span><div><div class="nickname">${esc(nick || L("이름표", "Name tag"))}</div><span class="grow">${L(`지금 나는 ${g.ko}`, `I am ${g.en}`)}</span></div></div>
+      <div class="prog" aria-label="${L(`깃발 ${total}개 중 ${done}개 통과`, `${done} of ${total} flags passed`)}"><i style="width:${Math.round(done / total * 100)}%"></i></div>
+      <dl class="facts">
+        <dt>${L("통과한 깃발", "Flags passed")}</dt><dd><b>${done}</b> / ${total}</dd>
+        <dt>${L("최근 시험", "Last test")}</dt><dd>${ls ? `${ls.n} ${esc(T(ls))} · ${last.right}/${last.total} ${last.pass ? "★" : ""} <small>${L(`${last.m}월 ${last.d}일`, `${last.m}/${last.d}`)}</small>` : L("아직 없어요", "Not yet")}</dd>
+        <dt>${L("다음 깃발", "Next flag")}</dt><dd>${next.n} ${esc(T(next))}</dd>
+      </dl>
+    </div>
+    <div class="row" style="justify-content:center;margin:22px 0 50px"><button class="btn big" data-act="start">${L("시작하기 →", "Start →")}</button></div>
+  </section>`;
+}
+/* 진도: 강물과 차례 */
+function viewRiver() {
+  S = null; PAGE = "river"; app.style.removeProperty("--cat");
+  const next = nextStage();
+  const here = DATA.stages.find(s => s.n === duckAt) || DATA.stages[0];
+  const W = fx(DATA.stages.length) + 220;
+  const firstOf = DATA.chapters.map((_, pi) => DATA.stages.find(s => s.part === pi).n);
+  app.innerHTML = topBar(true, true) + `
+  <div class="riverhead"><h1>${L("모험 지도", "Adventure map")}</h1>
+    <button class="btn" data-act="go" data-n="${next.n}">${L(`${next.n}번 깃발로 →`, `To flag ${next.n} →`)}</button></div>
+  <div class="river" id="river"><div class="scene" style="width:${W}px">
+    ${riverSVG(W)}
+    ${DATA.chapters.map((c, pi) => `<div class="sign" style="left:${fx(firstOf[pi]) - 70}px">${L(`${pi + 1}장 ${esc(c[0])}`, `${pi + 1}. ${c[1]}`)}</div>`).join("")}
+    ${DATA.stages.map(s => `<button class="flag ${passed[s.n] ? "done" : ""} ${next.n === s.n ? "next" : ""}" style="left:${fx(s.n)}px;--cat:var(--${s.cat})" data-act="go" data-n="${s.n}" aria-label="${s.n}번 깃발 ${esc(s.title)}${passed[s.n] ? ", 통과" : ""}"><span class="pole"></span><span class="cloth"></span><span class="num">${s.n}</span><span class="t">${esc(s.titleEn && /[가-힣]/.test(s.title) ? s.titleEn : s.title)}</span></button>`).join("")}
+    <div class="swimmer" id="swimmer">${BABY}</div>
+  </div></div>
+  <p class="hint">${L("← 밀어 보세요 →", "← Swipe →")}</p>
+  <section class="toc">
+    <h2>${L("차례", "Contents")}</h2>
+    <div class="chs">${DATA.chapters.map((c, pi) => {
+      const st = DATA.stages.filter(s => s.part === pi), done = st.filter(s => passed[s.n]).length;
+      const cls = done === st.length ? "" : pi === here.part ? "now" : done ? "" : "later";
+      return `<button class="ch ${cls}" data-act="chapter" data-n="${st[0].n}"><div class="k" style="color:var(--${st[0].cat})">${L(`${pi + 1}장`, `Ch. ${pi + 1}`)} · ${done}/${st.length}${done === st.length ? " ★" : ""}</div><div class="nm">${L(esc(c[0]), c[1])}</div></button>`;
+    }).join("")}</div>
+  </section>`;
+  placeDuck(duckAt, false);
+  const r = document.getElementById("river"); r.style.scrollBehavior = "auto"; r.scrollLeft = fx(duckAt) - r.clientWidth / 2; r.style.scrollBehavior = "";
+}
+/* 화면 바꾸기: 지금 화면은 옆으로 천천히 밀려 나가고, 새 화면이 반대쪽에서 들어온다. 그 사이 아기 오리가 화면 아래를 헤엄쳐 지나간다. */
+let PAGE = "main", turning = false;
+const TURN_MS = 1100;
+async function turn(render, dir) {
+  if (turning) return; turning = true;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) { render(); window.scrollTo(0, 0); turning = false; return; }
+  const ghost = document.createElement("div");
+  ghost.className = "wrap ghost"; ghost.setAttribute("aria-hidden", "true"); ghost.innerHTML = app.innerHTML;
+  ghost.querySelectorAll("[id]").forEach(e => e.removeAttribute("id"));
+  ghost.style.top = app.getBoundingClientRect().top + "px";
+  const oldRiver = app.querySelector(".river");
+  const duck = document.createElement("div");
+  duck.className = "crosser " + dir; duck.setAttribute("aria-hidden", "true"); duck.innerHTML = BABY;
+  document.body.classList.add("turning"); document.body.append(ghost, duck);
+  const gRiver = ghost.querySelector(".river"); if (oldRiver && gRiver) gRiver.scrollLeft = oldRiver.scrollLeft;
+  render(); window.scrollTo(0, 0);
+  ghost.classList.add("out-" + dir); app.classList.add("in-" + dir);
+  await sleep(TURN_MS);
+  ghost.remove(); duck.remove(); app.classList.remove("in-" + dir); document.body.classList.remove("turning"); turning = false;
+}
+function placeDuck(n, anim) {
+  const el = document.getElementById("swimmer"); if (!el) return;
+  if (!anim) el.style.transition = "none";
+  el.style.transform = `translateX(${fx(n) - 40}px)`;
+  if (!anim) { el.offsetWidth; el.style.transition = ""; }
+}
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+async function swimTo(n) {
+  if (swimming) return; swimming = true;
+  const el = document.getElementById("swimmer"), river = document.getElementById("river");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const from = duckAt, dir = n >= from ? 1 : -1, steps = Math.abs(n - from), hop = steps > 8 ? 90 : 260;
+  el.classList.toggle("left", dir < 0);
+  if (!reduce) for (let k = from + dir; steps && (dir > 0 ? k <= n : k >= n); k += dir) {
+    el.classList.add("hop"); el.style.transitionDuration = hop + "ms"; placeDuck(k, true);
+    river.scrollLeft = fx(k) - river.clientWidth / 2; await sleep(hop); el.classList.remove("hop");
+  }
+  duckAt = n; store.set("duckAt", n); placeDuck(n, true); await sleep(reduce ? 0 : 380);
+  swimming = false; showSheet(n);
+}
+
+/* ---------- 단계 ---------- */
+/* ---------- 레슨: 한 화면에 할 일 하나, 위에는 진행 막대, 아래에는 큰 버튼 하나 ---------- */
+function setCat(cat) { app.style.setProperty("--cat", `var(--${cat})`); }
+const shuffle = a => { a = a.slice(); for (let k = a.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [a[k], a[j]] = [a[j], a[k]]; } return a; };
+const normG = v => v.trim().toLowerCase().replace(/[’‘]/g, "'").replace(/[.!?,]/g, "").replace(/\s+/g, " ");
+
+function openStage(n, mode) {
+  S = {stage: DATA.stages.find(s => s.n === n)}; setCat(S.stage.cat);
+  mode === "test" ? startTest() : startLesson();
+}
+function buildSteps(s) {
+  const steps = [{t: "sound"}];
+  if (isG(s)) {
+    s.items.slice(0, 2).forEach(it => steps.push({t: "gex", it}));
+    shuffle(s.items).forEach(it => steps.push({t: "gpick", it}));
+    shuffle(s.items).slice(0, 4).forEach(it => steps.push({t: "gwrite", it}));
+  } else {
+    const ex = (s.items.filter(i => i[2]).length ? s.items.filter(i => i[2]) : s.items).slice(0, 3);
+    ex.forEach(it => steps.push({t: "ex", it}));
+    const kinds = ["pick", "see", "pick", "hear"];
+    shuffle(s.items).forEach((it, k) => steps.push({t: kinds[k % 4], it}));
+  }
+  return steps;
+}
+function startLesson() {
+  S.steps = buildSteps(S.stage); S.k = 0; S.view = "lesson"; S.retried = new Set();
+  enterStep(true);
+}
+function enterStep(speak) {
+  const st = S.steps[S.k];
+  S.sel = null; S.typed = ""; S.fb = null;
+  if (st.t === "pick") {
+    const ans = st.it[0], s = S.stage;
+    const mates = s.pairs.flatMap(([a, b]) => a === plain(ans) ? [b] : b === plain(ans) ? [a] : []);
+    const pool = shuffle(s.items.map(x => x[0]).filter(x => plain(x) !== plain(ans)));
+    st.opts = shuffle([ans, ...mates.filter(m => !pool.some(p => plain(p) === m)), ...pool].slice(0, 4));
+  }
+  renderStep();
+  if (speak) speakStep();
+}
+function speakStep() {
+  const st = S.steps[S.k];
+  if (!st) return;
+  if (st.t === "sound") return;
+  if (st.it && st.it.q) say(gSay(st.it, st.t === "gex"));
+  else if (st.it) say(plain(st.it[0]));
+}
+function lessonFrame(prog, body, foot, cls) {
+  return `<div class="lesson ${cls || ""}">
+    <header class="lh"><button class="x" data-act="quit" aria-label="${L("그만하고 지도로", "Quit to the map")}">✕</button>
+      <div class="pbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(prog * 100)}"><i style="width:${Math.max(4, Math.round(prog * 100))}%"></i></div>
+      <span class="ltag">${S.stage.n}</span></header>
+    <main class="lbody">${body}</main>
+    ${foot}
+  </div>`;
+}
+const ctaFoot = (label, act, dim) => `<footer class="lfoot"><button class="cta ${dim ? "dim" : ""}" data-act="${act}" id="cta">${label}</button></footer>`;
+function fbFoot(ok, extra) {
+  return `<footer class="lfoot fbsheet ${ok ? "ok" : "no"}" role="status">
+    <div class="fbmsg"><b>${ok ? L("잘했어요!", "Nice!") : L("정답은", "The answer is")}</b>${extra}</div>
+    <button class="cta" data-act="next" id="cta">${L("계속", "Continue")}</button></footer>`;
+}
+function renderStep() {
+  S.view = "lesson";
+  const st = S.steps[S.k], s = S.stage, prog = S.k / S.steps.length;
+  let body = "", foot = ctaFoot(L("계속", "Continue"), "next");
+  const hearBtns = `<div class="row" style="justify-content:center;gap:14px"><button class="hear big" data-act="again" aria-label="${L("다시 듣기", "Listen again")}">${ICON_HEAR}</button><button class="slowbtn" data-act="slow" aria-label="${L("천천히 듣기", "Listen slowly")}">${L("천천히", "Slow")}</button></div>`;
+  const fbExtra = () => st.it.q ? `<span class="fbword">${dlgHTML(st.it, "fill")}</span>` : `<span class="fbword word">${wordHTML(st.it[0])}</span>`;
+  if (st.t === "sound") {
+    const ex = s.items.filter(i => !i.q && i[2]).slice(0, 3);
+    body = `<p class="kicker">${esc(L(s.goal, s.goalEn))}</p>
+      <div class="bigsound">${esc(L(s.sound, s.sound.replace(/[가-힣]+/g, "").replace(/\s+/g, " ").trim()))}</div>
+      <p class="lead">${esc(L(s.intro, s.introEn))}</p>
+      <p class="tip">${ICON_MOUTH}<span>${esc(L(s.how, s.howEn))}</span></p>
+      ${isG(s) ? "" : `<div class="chain" id="chain">${ex.map((i, k) => `<button class="wbtn" data-act="say" data-w="${esc(plain(i[0]))}">${picHTML(i[3], "", true)}<span class="word">${wordHTML(i[0])}</span></button>`).join("")}</div>
+      <button class="hear big" data-act="chain" aria-label="${L("소리 들어 보기", "Listen")}">${ICON_HEAR}</button>`}`;
+    S.ex = ex.map(i => plain(i[0]));
+    foot = ctaFoot(L("시작!", "Let's go!"), "next");
+  } else if (st.t === "ex") {
+    body = `<p class="kicker">${L("새 단어", "New word")}</p>
+      <button class="excard" data-act="again">${picHTML(st.it[3], "huge")}<span class="word">${wordHTML(st.it[0])}</span><span class="ko">${esc(st.it[1])}</span></button>`;
+  } else if (st.t === "gex") {
+    body = `<p class="kicker">${L("이렇게 써요", "Example")}</p>
+      <button class="excard left" data-act="again">${dlgHTML(st.it, "fill")}<span class="ko">${esc(s.kind === "m" ? `${st.it.ko} = ${st.it.a}` : st.it.ko)}</span></button>`;
+  } else if (st.t === "pick") {
+    body = `<p class="kicker">${L("들리는 단어를 골라요", "Tap what you hear")}</p>${hearBtns}
+      <div class="opts">${st.opts.map(o => `<button class="opt ${S.sel === o ? "sel" : ""} ${S.fb && o === st.it[0] ? "right" : ""} ${S.fb === "no" && S.sel === o ? "wrong" : ""}" data-act="sel" data-o="${esc(o)}" ${S.fb ? "disabled" : ""}><span class="word">${wordHTML(o)}</span></button>`).join("")}</div>`;
+    foot = S.fb ? fbFoot(S.fb === "ok", fbExtra()) : ctaFoot(L("확인", "Check"), "check", !S.sel);
+  } else if (st.t === "see" || st.t === "hear") {
+    const cells = parse(st.it[0]);
+    body = `<p class="kicker">${st.t === "see" ? L("보고 따라 써요", "Look and type") : L("듣고 써요", "Listen and type")}</p>
+      ${st.t === "see" ? `<div class="center" style="gap:6px">${picHTML(st.it[3], "big")}<div class="word" id="model">${wordHTML(st.it[0])}</div></div>` : `<div class="center" style="gap:10px">${picHTML(st.it[3], "big")}${hearBtns}</div>`}
+      <div class="boxes" id="boxes" aria-hidden="true">${cells.map(c => (c.gap ? '<b class="sp"></b>' : "") + `<b class="${c.k}"></b>`).join("")}</div>
+      <input class="type" id="tin" lang="en" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="${L("영어로 쓰기", "Type the word")}" placeholder="${L("여기에 써요", "Type here")}" ${S.fb ? "disabled" : ""} value="${esc(S.typed)}">`;
+    foot = S.fb ? fbFoot(S.fb === "ok", fbExtra()) : ctaFoot(L("확인", "Check"), "check");
+  } else if (st.t === "gpick") {
+    body = `<p class="kicker">${s.kind === "m" ? L("노란 단어의 뜻은?", "What does the yellow word mean?") : L("빈칸에 알맞은 말은?", "Fill in the blank")}</p>
+      ${dlgHTML(st.it, S.fb === "ok" ? "fill" : "blank")}
+      <div class="gopts">${st.it.opts.map(o => `<button class="opt ${S.sel === o ? "sel" : ""} ${S.fb && o === st.it.a ? "right" : ""} ${S.fb === "no" && S.sel === o ? "wrong" : ""}" data-act="sel" data-o="${esc(o)}" ${S.fb ? "disabled" : ""}><span class="${s.kind === "m" ? "k" : ""}">${esc(o)}</span></button>`).join("")}</div>`;
+    foot = S.fb ? fbFoot(S.fb === "ok", s.kind === "m" ? ` <span class="fbword">${esc(st.it.a)}</span>` : fbExtra()) : ctaFoot(L("확인", "Check"), "check", !S.sel);
+  } else if (st.t === "gwrite") {
+    body = `<p class="kicker">${s.kind === "m" ? L("노란 단어의 뜻을 써요", "Type the meaning") : L("빈칸에 들어갈 말을 써요", "Type the missing word")}</p>
+      ${dlgHTML(st.it, S.fb === "ok" ? "fill" : "blank")}
+      <input class="type" id="tin" ${s.kind === "m" ? 'lang="ko"' : 'lang="en" autocapitalize="off"'} autocomplete="off" autocorrect="off" spellcheck="false" aria-label="${L("답 쓰기", "Your answer")}" placeholder="${L("여기에 써요", "Type here")}" ${S.fb ? "disabled" : ""} value="${esc(S.typed)}">`;
+    foot = S.fb ? fbFoot(S.fb === "ok", s.kind === "m" ? ` <span class="fbword">${esc(st.it.a)}</span>` : fbExtra()) : ctaFoot(L("확인", "Check"), "check");
+  }
+  app.innerHTML = lessonFrame(prog, body, foot, `t-${st.t}`);
+  const inp = document.getElementById("tin");
+  if (inp && !S.fb) {
+    inp.focus();
+    inp.addEventListener("input", () => { S.typed = inp.value; paintBoxes(inp.value, st); });
+    inp.addEventListener("keydown", e => { if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); S.typed = inp.value; checkStep(); } });
+    paintBoxes(inp.value, st);
+  } else if (inp) paintBoxes(inp.value, st);
+  const cta = document.getElementById("cta"); if (cta && (S.fb || !inp)) cta.focus({preventScroll: true});
+}
+function paintBoxes(v, st) {
+  if (!st.it || st.it.q) return;
+  const ans = plain(st.it[0]), bs = [...document.querySelectorAll("#boxes b:not(.sp)")];
+  bs.forEach((b, k) => { const t = v[k] || "", ok = !!t && t.toLowerCase() === ans[k].toLowerCase(); b.textContent = t; b.classList.toggle("good", ok); b.classList.toggle("wrong", !!t && !ok); });
+}
+function checkStep() {
+  const st = S.steps[S.k];
+  let ok;
+  if (st.t === "pick") { if (!S.sel) return nudge(); ok = S.sel === st.it[0]; }
+  else if (st.t === "gpick") { if (!S.sel) return nudge(); ok = S.sel === st.it.a; }
+  else if (st.t === "see" || st.t === "hear") { if (!S.typed.trim()) return nudge(); ok = S.typed.trim().toLowerCase() === plain(st.it[0]).toLowerCase(); }
+  else if (st.t === "gwrite") { if (!S.typed.trim()) return nudge(); ok = st.it.alts.some(a => normG(a) === normG(S.typed)); }
+  S.fb = ok ? "ok" : "no";
+  if (!ok && !S.retried.has(S.k)) { S.retried.add(S.steps.length); S.steps.push({...st}); }
+  renderStep();
+  if (st.it.q) say(gSay(st.it, true)); else say(plain(st.it[0]));
+  const lb = document.querySelector(".lesson"); if (lb) lb.classList.add(ok ? "yay" : "oops");
+}
+function nudge() { const c = document.getElementById("cta"); if (c) { c.classList.remove("shake"); c.offsetWidth; c.classList.add("shake"); } speakStep(); }
+function nextStep() {
+  const st = S.steps[S.k];
+  if (st && ["pick", "see", "hear", "gpick", "gwrite"].includes(st.t) && !S.fb) return checkStep();
+  if (S.k + 1 >= S.steps.length) return viewDone();
+  S.k++; enterStep(true);
+}
+function viewDone() {
+  S.view = "done";
+  app.innerHTML = lessonFrame(1, `<div class="center" style="gap:14px"><div class="bigduck yay">${BABY}</div>
+    <h2 class="donet">${L("연습 끝!", "Practice done!")}</h2><p class="lead">${L("이제 활동지를 꺼내 시험을 봐요", "Get your worksheet ready for the test")}</p>
+    <button class="linkbtn" data-act="relearn">${L("한 번 더 연습하기", "Practice again")}</button></div>`,
+    ctaFoot(L("시험 보기", "Start the test"), "totest"), "t-done");
+}
+
+/* ---------- 시험: 소리만 듣고 활동지에 쓰기 ---------- */
+function startTest() {
+  const t = (isG(S.stage) ? S.stage.items : S.stage.items.filter(i => i[2])).slice();
+  S.test = shuffle(t); S.ti = 0; S.marks = new Array(t.length).fill(null); viewTest();
+}
+function viewTest(quiet) {
+  S.view = "test";
+  const it = S.test[S.ti], last = S.ti + 1 === S.test.length;
+  app.innerHTML = lessonFrame(S.ti / S.test.length, `
+    <p class="kicker">${L("시험 · 활동지에 써요", "Test · write on your worksheet")}</p>
+    <p class="paper">${L(`<b>${S.ti + 1}</b>번`, `Box <b>${S.ti + 1}</b>`)}</p>
+    ${it.q ? `${dlgHTML(it, "num")}<p class="tip" style="justify-content:center">${S.stage.kind === "m" ? L("노란 단어의 뜻을 우리말로 써요", "Write the meaning in Korean") : L("빈칸에 들어갈 말을 써요", "Write the missing word")}</p>` : ""}
+    <div class="row" style="justify-content:center;gap:14px"><button class="hear big" data-act="tsay" aria-label="${L("듣기", "Listen")}">${ICON_HEAR}</button><button class="slowbtn" data-act="tslow">${L("천천히", "Slow")}</button></div>
+    ${canSpeak || it.q ? "" : `<p class="ko" style="text-align:center">${esc(it[1])}</p>`}
+    ${S.ti ? `<button class="linkbtn" data-act="tprev">${L("← 앞 번호 다시 듣기", "← Back")}</button>` : ""}`,
+    ctaFoot(last ? L("다 썼어요. 채점하기", "Done. Check answers") : L("다음", "Next"), "tnext"), "t-test");
+  if (!quiet) say(audio(it));
+}
+function viewCheck() {
+  S.view = "check";
+  app.innerHTML = lessonFrame(1, `
+    <p class="kicker">${L("색연필로 채점해요 · 한 글자라도 다르면 ✕", "Mark your worksheet · one letter wrong = ✕")}</p>
+    <div class="anslist">${S.test.map((it, k) => `<div class="ans"><span class="num">${k + 1}</span>${it.q ? `${dlgHTML(it, "fill")}` : `${picHTML(it[3], "sm", true)}
+      <button class="word" data-act="say" data-w="${esc(plain(it[0]))}">${wordHTML(it[0])}</button>`}
+      <span class="ox" role="group" aria-label="${k + 1}"><button class="o" data-act="mark" data-k="${k}" data-v="1" aria-pressed="${S.marks[k] === 1}" aria-label="${L("맞음", "Right")}">○</button><button class="x" data-act="mark" data-k="${k}" data-v="0" aria-pressed="${S.marks[k] === 0}" aria-label="${L("틀림", "Wrong")}">✕</button></span></div>`).join("")}</div>
+    <p class="err" id="gErr" role="alert"></p>`,
+    ctaFoot(L("채점 끝", "Done"), "graded"), "t-check");
+}
+async function finishTest() {
+  if (S.marks.some(m => m === null)) { document.getElementById("gErr").innerHTML = L("아직 안 고른 번호가 있어요", "Mark every number"); return; }
+  const s = S.stage, right = S.marks.filter(m => m === 1).length, total = S.test.length;
+  const wrong = S.test.filter((_, k) => !S.marks[k]).map(answerOf);
+  const pass = right / total >= PASS_RATE, stars = right === total ? 3 : pass ? 2 : right / total >= 0.5 ? 1 : 0;
+  const before = growth().ko;
+  if (pass) { passed[s.n] = true; store.set("passed", passed); }
+  const now = new Date(); store.set("last", {n: s.n, right, total, pass, m: now.getMonth() + 1, d: now.getDate()});
+  S.res = {right, total, wrong, pass, stars, grew: pass && growth().ko !== before, d: now, sent: "wait"};
+  viewResult();
+  S.res.sent = await sendRecord({nick, dev, stage: s.n, title: s.title, right, total, wrong: wrong.join(", ")});
+  if (S && S.view === "result") viewResult();
+}
+function viewResult() {
+  S.view = "result";
+  const s = S.stage, r = S.res, g = growth();
+  const msg = r.pass ? (r.stars === 3 ? L("모두 맞았어요!", "All correct!") : L("통과!", "Passed!")) : L("한 번 더 연습해요", "Practice once more");
+  const sent = {wait: L("보내는 중…", "Sending…"), sent: L("선생님께 보냈어요", "Sent to your teacher"), queued: L("나중에 보낼게요", "Will send later"), off: L("활동지에만 적어요", "Worksheet only")}[r.sent];
+  app.innerHTML = lessonFrame(1, `<div class="center" style="gap:10px">
+      <div class="bigduck ${r.pass ? "yay" : "oops"}">${BABY}</div>
+      <div class="stars" aria-label="${L("별", "stars")} ${r.stars}">${"★".repeat(r.stars)}${"☆".repeat(3 - r.stars)}</div>
+      <h2 class="donet">${msg}</h2>
+      <div class="score">${r.right}<span>/${r.total}</span></div>
+      ${r.grew ? `<p class="grownote">${L(`쑥쑥! 이제 ${g.ko}예요`, `You are ${g.en} now!`)}</p>` : ""}</div>
+    <div class="sheet"><h3>${L("활동지에 적어요", "Write on your worksheet")}</h3><dl>
+      <dt>${L("날짜", "Date")}</dt><dd>${L(`${r.d.getMonth() + 1}월 ${r.d.getDate()}일`, `${r.d.getMonth() + 1}/${r.d.getDate()}`)}</dd>
+      <dt>${L("깃발", "Flag")}</dt><dd>${s.n} ${esc(T(s))}</dd>
+      <dt>${L("맞은 개수", "Score")}</dt><dd>${r.right} / ${r.total}</dd>
+      <dt>${L("고쳐 쓸 것", "Fix these")}</dt><dd>${r.wrong.length ? r.wrong.map(esc).join(", ") : L("없어요", "None")}</dd></dl></div>
+    <p class="tip" style="justify-content:center">${sent}</p>
+    ${r.pass ? "" : `<button class="linkbtn" data-act="relearn">${L("다시 연습하기", "Practice again")}</button>`}`,
+    ctaFoot(L("지도로", "Back to the map"), "home"), "t-result");
+}
+
+/* ---------- 지도에서 깃발을 누르면 뜨는 작은 창 ---------- */
+function showSheet(n) {
+  const s = DATA.stages.find(x => x.n === n);
+  const old = document.getElementById("ssheet"); if (old) old.remove();
+  const w = document.createElement("div"); w.id = "ssheet"; w.className = "sheetbg";
+  w.innerHTML = `<div class="ssheet" role="dialog" aria-modal="true" aria-label="${s.n} ${esc(T(s))}" style="--cat:var(--${s.cat})">
+    <div class="row" style="gap:12px"><span class="no">${s.n}</span><div><div class="sstitle">${esc(T(s))}</div><div class="kicker" style="margin:0;text-align:left">${esc(L(s.goal, s.goalEn))}</div></div></div>
+    <button class="cta" data-act="learn" data-n="${n}">${passed[n] ? L("다시 배우기", "Learn again") : L("배우기", "Start learning")}</button>
+    <button class="linkbtn" data-act="testonly" data-n="${n}">${L("바로 시험 보기", "Go straight to the test")}</button>
+    <button class="linkbtn" data-act="closesheet">${L("닫기", "Close")}</button></div>`;
+  document.body.appendChild(w);
+  w.querySelector(".cta").focus();
+}
+function closeSheet() { const s = document.getElementById("ssheet"); if (s) s.remove(); }
+
+function rerender() {
+  if (!S) { PAGE === "river" ? viewRiver() : viewMain(); return; }
+  ({lesson: renderStep, done: viewDone, test: () => viewTest(true), check: viewCheck, result: viewResult}[S.view] || renderStep)();
+}
+function playChain() {
+  const cards = [...document.querySelectorAll("#chain .wbtn")];
+  sayChain(S.ex, k => cards.forEach((c, j) => c.classList.toggle("on", j === k)));
+}
+
+/* ---------- 닉네임 ---------- */
+const dlg = document.getElementById("nickDlg");
+function dlgText() {
+  document.getElementById("dlgT").textContent = L("꽥! 이름표", "Quack! Name tag");
+  document.getElementById("dlgP").textContent = L("별명 6글자까지 (진짜 이름은 안 돼요)", "A nickname, up to 6 letters (not your real name)");
+  document.getElementById("nickGo").textContent = L("시작!", "Start!");
+  document.getElementById("nickIn").placeholder = L("예: 수달왕", "e.g. Ducky");
+}
+function askNick() { dlgText(); document.getElementById("nickIn").value = nick; document.getElementById("nickErr").textContent = ""; try { dlg.showModal(); } catch (e) { dlg.setAttribute("open", ""); } }
+function saveNick() {
+  const v = document.getElementById("nickIn").value.replace(/\s+/g, "").slice(0, 6);
+  if (!v) { document.getElementById("nickErr").innerHTML = `${L(`별명을 써 주세요`, "Write a nickname")}`; return; }
+  nick = v; store.set("nick", v);
+  try { dlg.close(); } catch (e) { dlg.removeAttribute("open"); }
+  if (!S) rerender(); else document.querySelectorAll('[data-act="nick"]').forEach(c => c.firstChild.textContent = nick);
+}
+document.getElementById("nickGo").addEventListener("click", saveNick);
+document.getElementById("nickIn").addEventListener("keydown", e => { if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); saveNick(); } });
+dlg.addEventListener("cancel", e => { if (!nick) e.preventDefault(); });
+
+/* ---------- 누르기 ---------- */
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-act]");
+  if (!b) { if (e.target.id === "ssheet") closeSheet(); return; }
+  const a = b.dataset.act;
+  if (a === "go") swimTo(+b.dataset.n);
+  else if (a === "learn" || a === "testonly") { const n = +b.dataset.n; closeSheet(); turn(() => openStage(n, a === "testonly" ? "test" : "learn"), "fwd"); }
+  else if (a === "closesheet") closeSheet();
+  else if (a === "chapter") { const r = document.getElementById("river"); r.scrollLeft = fx(+b.dataset.n) - r.clientWidth / 2; r.scrollIntoView({block: "center"}); }
+  else if (a === "home" || a === "quit") { if (canSpeak) speechSynthesis.cancel(); turn(viewRiver, "back"); }
+  else if (a === "start") turn(viewRiver, "fwd");
+  else if (a === "main") turn(viewMain, "back");
+  else if (a === "nick") askNick();
+  else if (a === "lang") { LANG = LANG === "ko" ? "en" : "ko"; try { localStorage.setItem("duck3.lang", LANG); } catch (x) {} document.documentElement.lang = LANG; rerender(); }
+  else if (a === "say") say(b.dataset.w);
+  else if (a === "chain") playChain();
+  else if (a === "again") speakStep();
+  else if (a === "slow") { const st = S.steps[S.k]; say(st.it.q ? gSay(st.it, false) : plain(st.it[0]), true); }
+  else if (a === "sel") { S.sel = b.dataset.o; renderStep(); const st = S.steps[S.k]; if (st.t === "gpick" && S.stage.kind !== "m") say(gSay({...st.it, a: S.sel}, true)); }
+  else if (a === "check") { const inp = document.getElementById("tin"); if (inp) S.typed = inp.value; checkStep(); }
+  else if (a === "next") nextStep();
+  else if (a === "relearn") turn(startLesson, "fwd");
+  else if (a === "totest") turn(startTest, "fwd");
+  else if (a === "tsay") say(audio(S.test[S.ti]));
+  else if (a === "tslow") say(audio(S.test[S.ti]), true);
+  else if (a === "tprev") { S.ti--; viewTest(); }
+  else if (a === "tnext") { if (S.ti + 1 < S.test.length) { S.ti++; viewTest(); } else { if (canSpeak) speechSynthesis.cancel(); viewCheck(); window.scrollTo(0, 0); } }
+  else if (a === "mark") { S.marks[+b.dataset.k] = +b.dataset.v; b.parentElement.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); }
+  else if (a === "graded") finishTest();
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeSheet();
+  if (e.key === "Enter" && S && S.view === "lesson" && S.fb && document.activeElement && document.activeElement.tagName !== "BUTTON") { e.preventDefault(); nextStep(); }
+});
+document.addEventListener("submit", e => e.preventDefault());
+
+document.documentElement.lang = LANG; dlgText();
+document.getElementById("dlgDuck").innerHTML = BABY;
+viewMain(); flushQueue();
+if (!nick) askNick();
+</script>
+</body>
+</html>
