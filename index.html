@@ -208,7 +208,7 @@ dialog h2{font-size:34px}
 .maintitle svg.teacher{width:100%;max-width:260px;justify-self:end}
 .me{margin-top:10px}
 .who{display:flex;align-items:center;gap:14px}
-.meduck{width:72px;height:72px;flex:none} .meduck svg{width:100%;height:100%}
+.meduck{width:72px;height:72px;flex:none;border:0;background:none;padding:0;cursor:pointer} .meduck svg{width:100%;height:100%}
 .nickname{font-weight:700;font-size:36px;line-height:1}
 .grow{font-weight:600;display:inline-block;margin-top:6px;background:var(--duck);color:#4a2e1c;border:3px solid var(--ink);border-radius:999px;padding:0 12px;font-size:18px}
 .prog{height:18px;border:3px solid var(--ink);border-radius:999px;background:var(--paper);margin:16px 0 10px;overflow:hidden}
@@ -331,6 +331,15 @@ html.arrive .grow .dots b{animation-delay:2.2s}html.arrive .grow .dots b:nth-chi
 @keyframes popIn{0%{opacity:0;transform:scale(.3)}100%{opacity:1;transform:scale(1)}}
 .copy{text-align:center;font-size:14px;color:var(--muted);margin:0 0 24px}
 html.arrive .main > :nth-child(5){animation-delay:1.6s}
+.me{margin-top:64px}
+.bubble{position:absolute;left:14px;bottom:calc(100% + 12px);max-width:min(440px,calc(100% - 28px));text-align:left;background:var(--card);border:3px solid var(--ink);border-radius:20px;padding:10px 16px;font:inherit;font-size:18px;font-weight:500;color:var(--ink);line-height:1.4;opacity:0;transform:translateY(6px) scale(.96);transform-origin:20% 100%;transition:opacity .4s,transform .4s;cursor:pointer}
+.hintbtn{border:3px solid var(--ink);background:#fff6c8;border-radius:999px;padding:8px 18px;font:inherit;font-weight:700;font-size:19px;color:var(--ink)}
+.hintlist{display:flex;flex-wrap:wrap;gap:10px;padding:6px 0 4px}
+.hintlist span{border:3px solid var(--line);border-radius:14px;padding:6px 14px;font-size:24px;background:var(--paper)}
+.hintlist span[lang=en]{font-family:var(--eng)}
+.bubble::after{content:"";position:absolute;left:34px;bottom:-12px;width:18px;height:18px;background:var(--card);border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);transform:rotate(45deg)}
+.bubble.show{opacity:1;transform:none}
+.bubble:empty,.bubble span:empty{display:none}
 @media (prefers-reduced-motion:reduce){.grow .dots b,.grow em{opacity:1!important}*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
@@ -422,11 +431,20 @@ const wordHTML = m => parse(m).map(c => (c.gap ? '<span class="gap"></span>' : "
 const canSpeak = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
 let voice = null, curU = null, chainId = 0;
 function pickVoice() {
-  try { const v = speechSynthesis.getVoices(); voice = v.find(x => /^en[-_]US/i.test(x.lang) && x.localService) || v.find(x => /^en[-_]US/i.test(x.lang)) || v.find(x => /^en/i.test(x.lang)) || null; } catch (e) {}
+  /* 발음이 또렷한 목소리를 먼저 고른다: 자연스러운(Natural·Online) 목소리 → 구글 → 애플 → 그 밖의 미국 영어 */
+  try {
+    const v = speechSynthesis.getVoices(), us = v.filter(x => /^en[-_]US/i.test(x.lang));
+    const pref = [/Natural|Online/i, /Google US English/i, /Samantha|Ava|Allison|Susan/i, /Aria|Jenny|Zira/i];
+    voice = null;
+    for (const re of pref) { voice = us.find(x => re.test(x.name)); if (voice) break; }
+    voice = voice || us.find(x => x.localService) || us[0] || v.find(x => /^en/i.test(x.lang)) || null;
+  } catch (e) {}
 }
 if (canSpeak) { pickVoice(); try { speechSynthesis.addEventListener("voiceschanged", pickVoice); } catch (e) { speechSynthesis.onvoiceschanged = pickVoice; } }
 function utter(text, rate) {
-  const u = new SpeechSynthesisUtterance(String(text).replace(/\bSh+h\b!?/gi, "Shee,")); u.lang = "en-US"; if (voice) u.voice = voice; u.rate = rate; u.volume = 1;
+  let t = String(text).replace(/\bSh+h\b!?/gi, "Shee,").trim();
+  if (/^[A-Za-z' -]+$/.test(t)) t += "."; /* 단어만 읽을 때 마침표를 붙여야 끝소리(milk의 k 등)가 또렷하다 */
+  const u = new SpeechSynthesisUtterance(t); u.lang = "en-US"; if (voice) u.voice = voice; u.rate = rate; u.volume = 1;
   u.onerror = ev => { if (ev.error !== "interrupted" && ev.error !== "canceled") soundTrouble(); };
   curU = u; /* 전역에 잡아 두어야 일부 크롬에서 소리가 중간에 끊기지 않는다 */
   return u;
@@ -533,6 +551,69 @@ function riverSVG(W) {
 }
 /* 메인: 제목, 별명, 최근 진도 */
 function nextStage() { return DATA.stages.find(s => !passed[s.n]) || DATA.stages[DATA.stages.length - 1]; }
+/* 메인 화면 오리 말풍선 대사 [한국어, 영어, 단계(없으면 모든 단계)] */
+const DUCK_LINES = [
+  ["영어를 배워서… 먼 바다로 떠나야지!", "I'll learn English… and sail to the faraway sea!"],
+  ["영어를 배우면 뭐가 좋을까?", "What's good about learning English?"],
+  ["영어를 배우면 다른 나라 오리랑 말할 수 있겠지?", "With English, I can talk to ducks from other countries!"],
+  ["오늘은 어떤 소리를 배울까?", "Which sound will we learn today?"],
+  ["꽥! 오늘도 같이 해 볼까?", "Quack! Shall we do it together today?"],
+  ["틀려도 괜찮아. 다시 하면 되지!", "It's okay to be wrong. We can try again!"],
+  ["천천히 들어도 괜찮아.", "It's fine to listen slowly."],
+  ["c-a-t, cat! 소리를 이으면 단어가 돼.", "c-a-t, cat! Sounds join to make words."],
+  ["sh는 '쉬-' 하고 조용히 하는 소리야.", "sh is the quiet 'shh' sound."],
+  ["끝에 e가 오면 앞 모음이 제 이름을 말해. cake!", "A final e makes the vowel say its name. cake!"],
+  ["ee는 길게 '이-'. tree, bee!", "ee says a long 'ee'. tree, bee!"],
+  ["모르는 단어는 소리를 하나씩 들어 봐.", "Listen to new words one sound at a time."],
+  ["한 글자씩 또박또박 써 보자.", "Let's write it neatly, letter by letter."],
+  ["깃발을 하나 더 모으면 기분이 좋겠다!", "One more flag would feel great!"],
+  ["연못 건너편엔 뭐가 있을까?", "What's on the other side of the pond?"],
+  ["숲속 친구들한테 영어로 인사해 볼래. Hello!", "I'll say hello to my forest friends. Hello!"],
+  ["Good morning! 아침 인사는 이렇게 해.", "Good morning! That's how we greet in the morning."],
+  ["How are you? 하고 물으면 I'm fine! 이라고 해 봐.", "If someone asks 'How are you?', say 'I'm fine!'"],
+  ["Thank you! 고마울 땐 이렇게 말해.", "Thank you! That's what we say to be kind."],
+  ["어제 배운 단어, 아직 기억나?", "Do you still remember yesterday's words?"],
+  ["쉬는 것도 공부야. 물 한 모금 마시고 오자.", "Resting is part of learning. Have some water!"],
+  ["어려운 건 오리 선생님한테 물어보자.", "Ask Teacher Duck when it's tricky."],
+  ["친구가 틀려도 웃지 말고 응원해 주자.", "Cheer for friends, even when they make mistakes."],
+  ["매일 조금씩! 그게 제일 강해.", "A little every day is the strongest way!"],
+  ["듣고, 말하고, 써 보면 머리에 쏙 들어와.", "Listen, say, write — and it sticks!"],
+  ["소리 내서 따라 하면 더 잘 기억나.", "Saying it out loud helps you remember."],
+  ["영어로 꿈을 꾸면 어떤 기분일까?", "I wonder what dreaming in English feels like."],
+  ["언젠가 영어 동화책을 혼자 읽을 거야.", "Someday I'll read English storybooks by myself."],
+  ["Monday, Tuesday… 요일 이름도 노래처럼 외워 보자.", "Monday, Tuesday… let's sing the days of the week."],
+  ["one, two, three! 숫자 세는 건 자신 있어.", "One, two, three! I'm good at counting."],
+  ["활동지는 잘 챙겼지?", "Do you have your worksheet ready?"],
+  ["시험 전에 연습 한 번 더 하면 든든해.", "One more practice before the test feels safe."],
+  ["바람이 시원하다. 공부하기 딱 좋은 날이야.", "What a breezy day. Perfect for learning."],
+  ["비 오는 날은 rain, 해 뜬 날은 sun!", "A rainy day is rain, a sunny day is sun!"],
+  ["물방울이 퐁당! 그것도 영어로 말해 볼까?", "Plop! Can we say that in English too?"],
+  ["나는 오늘 어제보다 조금 더 자랐어.", "Today I grew a little more than yesterday."],
+  ["넘어져도 다시 헤엄치면 돼!", "If I tip over, I just swim again!"],
+  ["모든 오리는 자기 속도로 헤엄쳐.", "Every duck swims at its own speed."],
+  ["열심히 한 나, 칭찬해!", "Good job, me, for trying hard!"],
+  ["같이 하니까 더 재미있다. 꽥!", "It's more fun together. Quack!"],
+  ["알 속은 좀 깜깜해… 그래도 소리는 잘 들려!", "It's dark in my egg… but I can hear sounds!", "egg"],
+  ["톡, 톡… 언제쯤 깨어날 수 있을까?", "Tap, tap… when will I hatch?", "egg"],
+  ["깃발을 모으면 알을 깨고 나갈 수 있대!", "They say flags help me hatch!", "egg"],
+  ["알 속에서 a, b, c를 연습하는 중이야.", "I'm practicing a, b, c inside my egg.", "egg"],
+  ["드디어 알에서 나왔어! 세상이 넓다!", "I finally hatched! The world is so big!", "baby"],
+  ["처음 헤엄치는 건 좀 떨리지만 재밌어.", "My first swims are scary but fun.", "baby"],
+  ["깃털이 조금씩 자라고 있어. 영어 실력도!", "My feathers are growing. My English too!", "baby"],
+  ["이제 어른 오리야! 먼 바다도 갈 수 있겠어.", "I'm a grown-up duck! I can go to the faraway sea.", "adult"],
+  ["다른 나라 오리를 만나면 영어로 먼저 인사할 거야.", "I'll greet ducks from other countries in English first.", "adult"],
+  ["이제 내가 아기 오리들한테 가르쳐 줄 차례야.", "Now it's my turn to teach the baby ducks.", "adult"],
+];
+let lineAt = -1, lineTimer = 0;
+function duckLines() { const look = growth().look; return DUCK_LINES.filter(l => !l[2] || l[2] === look); }
+function nextLine(user) {
+  const b = document.getElementById("bubble"); if (!b) { clearInterval(lineTimer); return; }
+  const ls = duckLines(); let k; do { k = Math.floor(Math.random() * ls.length); } while (ls.length > 1 && k === lineAt);
+  lineAt = k; b.classList.remove("show"); void b.offsetWidth;
+  b.querySelector("span").textContent = L(ls[k][0], ls[k][1]); b.classList.add("show");
+  if (user) { clearInterval(lineTimer); lineTimer = setInterval(nextLine, 9000); }
+}
+
 function viewMain() {
   S = null; PAGE = "main"; app.style.removeProperty("--cat");
   const next = nextStage(), g = growth(), done = Object.keys(passed).length, total = DATA.stages.length;
@@ -544,7 +625,8 @@ function viewMain() {
       ${TEACHER}
     </div>
     <div class="paperbox me">
-      <div class="who"><span class="meduck">${duckSVG(g.look)}</span><div><div class="nickname">${esc(nick || L("이름표", "Name tag"))}</div><span class="grow" aria-label="${L(`나는 ${g.ko}`, `I am ${g.en}`)}"><span aria-hidden="true">${L("나는", "I am")}<i class="dots"><b>.</b><b>.</b><b>.</b><b>.</b></i><em>${L(g.ko, g.en)}</em></span></span>
+      <button class="bubble" id="bubble" data-act="talk" aria-live="polite"><span></span></button>
+      <div class="who"><button class="meduck" data-act="talk" aria-label="${L("오리에게 말 걸기", "Talk to the duck")}">${duckSVG(g.look)}</button><div><div class="nickname">${esc(nick || L("이름표", "Name tag"))}</div><span class="grow" aria-label="${L(`나는 ${g.ko}`, `I am ${g.en}`)}"><span aria-hidden="true">${L("나는", "I am")}<i class="dots"><b>.</b><b>.</b><b>.</b><b>.</b></i><em>${L(g.ko, g.en)}</em></span></span>
         ${g.next ? `<div class="nextgrow">${L(`깃발 ${g.next.left}개 더 통과하면 ${g.next.ko}!`, `${g.next.left} more flags to become ${g.next.en}!`)}</div>` : `<div class="nextgrow">${L("다 자랐어요!", "All grown up!")}</div>`}</div></div>
       <div class="prog" aria-label="${L(`깃발 ${total}개 중 ${done}개 통과`, `${done} of ${total} flags passed`)}"><i style="width:${Math.round(done / total * 100)}%"></i></div>
       <dl class="facts">
@@ -556,6 +638,7 @@ function viewMain() {
     <div class="row" style="justify-content:center;margin:22px 0 28px"><button class="btn big" data-act="start">${L("시작하기 →", "Start →")}</button></div>
     <p class="copy">© 2026 꽉오리쌤. All rights reserved.</p>
   </section>`;
+  clearInterval(lineTimer); setTimeout(() => nextLine(), document.documentElement.classList.contains("arrive") ? 4200 : 700); lineTimer = setInterval(nextLine, 9000);
 }
 /* 진도: 강물과 차례 */
 function viewRiver() {
@@ -779,7 +862,7 @@ function viewDone() {
 /* ---------- 시험: 소리만 듣고 활동지에 쓰기 ---------- */
 function startTest() {
   const t = (isG(S.stage) ? S.stage.items : S.stage.items.filter(i => i[2])).slice();
-  S.test = shuffle(t); S.ti = 0; S.marks = new Array(t.length).fill(null); viewTest();
+  S.test = shuffle(t); S.ti = 0; S.hint = false; S.marks = new Array(t.length).fill(null); viewTest();
 }
 function viewTest(quiet) {
   S.view = "test";
@@ -790,9 +873,21 @@ function viewTest(quiet) {
     ${it.q ? `${dlgHTML(it, "num")}<p class="tip" style="justify-content:center">${S.stage.kind === "m" ? L("노란 단어의 뜻을 우리말로 써요", "Write the meaning in Korean") : L("빈칸에 들어갈 말을 써요", "Write the missing word")}</p>` : ""}
     <div class="row" style="justify-content:center;gap:14px"><button class="hear big" data-act="tsay" aria-label="${L("듣기", "Listen")}">${ICON_HEAR}</button><button class="slowbtn" data-act="tslow">${L("천천히", "Slow")}</button></div>
     ${canSpeak || it.q ? "" : `<p class="ko" style="text-align:center">${esc(it[1])}</p>`}
-    ${S.ti ? `<button class="linkbtn" data-act="tprev">${L("← 앞 번호 다시 듣기", "← Back")}</button>` : ""}`,
+    <div class="row" style="justify-content:center;gap:18px">${S.ti ? `<button class="linkbtn" data-act="tprev">${L("← 앞 번호", "← Back")}</button>` : ""}<button class="hintbtn" data-act="hint">💡 ${L("힌트", "Hint")}</button></div>`,
     ctaFoot(last ? L("다 썼어요. 채점하기", "Done. Check answers") : L("다음", "Next"), "tnext"), "t-test");
   if (!quiet) say(audio(it));
+}
+function showHint() {
+  S.hint = true;
+  const words = S.test.map(answerOf).slice().sort((a, b) => a.localeCompare(b));
+  const old = document.getElementById("ssheet"); if (old) old.remove();
+  const w = document.createElement("div"); w.id = "ssheet"; w.className = "sheetbg";
+  w.innerHTML = `<div class="ssheet" role="dialog" aria-modal="true" aria-label="${L("힌트", "Hint")}" style="--cat:var(--${S.stage.cat})">
+    <div class="sstitle">💡 ${L("이 중에 답이 있어요", "The answers are in here")}</div>
+    <p class="kicker" style="margin:0;text-align:left">${L("순서는 섞여 있어요. 들리는 소리와 맞는 단어를 찾아봐요.", "They're in mixed order. Find the one that matches the sound.")}</p>
+    <div class="hintlist">${words.map(x => `<span lang="${S.stage.kind === "m" ? "ko" : "en"}">${esc(x)}</span>`).join("")}</div>
+    <button class="cta" data-act="closesheet">${L("닫기", "Close")}</button></div>`;
+  document.body.appendChild(w); w.querySelector(".cta").focus();
 }
 function viewCheck() {
   S.view = "check";
@@ -812,9 +907,9 @@ async function finishTest() {
   const before = growth().ko;
   if (pass) { passed[s.n] = true; store.set("passed", passed); }
   const now = new Date(); store.set("last", {n: s.n, right, total, pass, m: now.getMonth() + 1, d: now.getDate()});
-  S.res = {right, total, wrong, pass, stars, grew: pass && growth().ko !== before, d: now, sent: "wait"};
+  S.res = {hint: S.hint, right, total, wrong, pass, stars, grew: pass && growth().ko !== before, d: now, sent: "wait"};
   viewResult();
-  S.res.sent = await sendRecord({nick, dev, stage: s.n, title: s.title, right, total, wrong: wrong.join(", ")});
+  S.res.sent = await sendRecord({nick, dev, stage: s.n, title: s.title, right, total, wrong: wrong.join(", "), hint: S.res.hint ? "힌트" : ""});
   if (S && S.view === "result") viewResult();
 }
 function viewResult() {
@@ -832,6 +927,7 @@ function viewResult() {
       <dt>${L("날짜", "Date")}</dt><dd>${L(`${r.d.getMonth() + 1}월 ${r.d.getDate()}일`, `${r.d.getMonth() + 1}/${r.d.getDate()}`)}</dd>
       <dt>${L("깃발", "Flag")}</dt><dd>${s.n} ${esc(T(s))}</dd>
       <dt>${L("맞은 개수", "Score")}</dt><dd>${r.right} / ${r.total}</dd>
+      ${r.hint ? `<dt>${L("힌트", "Hint")}</dt><dd>💡 ${L("봤어요", "Used")}</dd>` : ""}
       <dt>${L("고쳐 쓸 것", "Fix these")}</dt><dd>${r.wrong.length ? r.wrong.map(esc).join(", ") : L("없어요", "None")}</dd></dl></div>
     <p class="tip" style="justify-content:center">${sent}</p>
     ${r.pass ? "" : `<button class="linkbtn" data-act="relearn">${L("다시 연습하기", "Practice again")}</button>`}`,
@@ -890,6 +986,8 @@ document.addEventListener("click", e => {
   if (a === "go") swimTo(+b.dataset.n);
   else if (a === "learn" || a === "testonly") { const n = +b.dataset.n; closeSheet(); turn(() => openStage(n, a === "testonly" ? "test" : "learn"), "fwd"); }
   else if (a === "closesheet") closeSheet();
+  else if (a === "hint") showHint();
+  else if (a === "talk") nextLine(true);
   else if (a === "chapter") { const r = document.getElementById("river"); r.scrollLeft = fx(+b.dataset.n) - r.clientWidth / 2; r.scrollIntoView({block: "center"}); }
   else if (a === "home" || a === "quit") { if (canSpeak) speechSynthesis.cancel(); turn(viewRiver, "back"); }
   else if (a === "start") turn(viewRiver, "fwd");
