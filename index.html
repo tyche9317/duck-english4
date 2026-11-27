@@ -338,6 +338,34 @@ html.arrive .grow .dots b{animation-delay:2.2s}html.arrive .grow .dots b:nth-chi
 .hintlist span[lang=en]{font-family:var(--eng)}
 .bubble::after{content:"";position:absolute;left:34px;bottom:-12px;width:18px;height:18px;background:var(--card);border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);transform:rotate(45deg)}
 .bubble.show{opacity:1;transform:none}
+.histbtn{margin-top:8px}
+.flaggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:6px}
+.fg{display:grid;place-items:center;height:42px;border:3px solid var(--line);border-radius:50%;font-family:var(--eng);font-weight:700;color:var(--muted);background:var(--card)}
+.fg.on{border-color:var(--ink);background:var(--g);color:#fff}
+.histtab{width:100%;border-collapse:collapse;font-size:17px} .histtab th{text-align:left;color:var(--muted);font-weight:600;font-size:15px;padding:4px 6px}
+.histtab td{padding:8px 6px;border-top:2px solid var(--line)} .okt{color:var(--ok);font-weight:700} .not{color:var(--bad);font-weight:700}
+.ansq{flex:1;min-width:0} .mean{margin:6px 0 0;font-size:19px} .mean b{font-size:22px;background:#fff6c8;border-radius:8px;padding:1px 8px} .mean small{color:var(--muted)}
+/* 꾸미기 */
+.me{position:relative}
+.stylebtn{position:absolute;top:12px;right:12px;border:3px solid var(--ink);background:#fff6c8;border-radius:999px;padding:5px 14px;font:inherit;font-weight:700;font-size:17px;color:var(--ink);box-shadow:0 3px 0 var(--ink)}
+.stylepreview{display:flex;justify-content:center;gap:14px}
+.sp{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 12px 8px;border-radius:20px;border:3px solid transparent}
+.sp span{display:block;width:clamp(70px,20vw,120px);height:clamp(70px,20vw,120px)} .sp svg{width:100%;height:100%;overflow:visible}
+.sp small{font-size:15px;color:var(--muted)} .sp.now{border-color:var(--ink);background:var(--card)} .sp.now small{color:var(--ink);font-weight:700}
+.sth{margin:0 0 10px;font-size:21px}
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:10px}
+.sw{display:flex;flex-direction:column;align-items:center;gap:4px;border:0;background:none;font:inherit;color:var(--ink);padding:4px}
+.sw i{width:46px;height:46px;border-radius:50%;border:3px solid var(--ink)} .sw small{font-size:14px}
+.sw.on i{box-shadow:0 0 0 4px var(--paper),0 0 0 7px var(--g)} .sw.on small{font-weight:700}
+.hats{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px}
+.hat{display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--card);border:3px solid var(--line);border-radius:18px;padding:8px 4px;font:inherit;color:var(--ink)}
+.hat svg{width:58px;height:50px;overflow:visible} .nohat{display:grid;place-items:center;width:58px;height:50px;font-size:26px;color:var(--muted)}
+.hat small{font-size:14px} .hat.on{border-color:var(--g);background:color-mix(in srgb,var(--g) 12%,var(--card));box-shadow:0 0 0 3px var(--g)}
+.hat.locked{opacity:.5;filter:grayscale(.9)}
+svg.duck{overflow:visible}
+.sp{padding-top:30px}
+.meduck{margin-top:14px}
+.bigduck{margin-top:24px}
 /* 빗방울 연못 */
 .gamecard{width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:var(--card);border:3px solid var(--ink);border-radius:20px;padding:14px 18px;font:inherit;color:var(--ink);box-shadow:0 4px 0 var(--ink)}
 .gamecard b{display:block;font-size:22px} .gamecard small{display:block;color:var(--muted);font-size:16px}
@@ -399,7 +427,7 @@ html:not(.arrive) .main > .startrow, html:not(.arrive) .main > .copy{animation:r
 /* ================= 선생님 설정 =================
    구글 Apps Script를 웹 앱으로 배포한 뒤 받은 주소를 아래 따옴표 안에 붙여 넣으세요.
    비워 두면 기록을 보내지 않고 연습과 시험만 할 수 있어요. */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzE9kcvg0VvbFS17NERR_cjY-MPdtB6ClG2cUNpFGvJp_JcMhFl1F4FuuUsOcZGLsoGHw/exec";
+/* 학생 기록은 이 기기 안에만 저장한다. 어디로도 보내지 않는다. */
 const PASS_RATE = 0.75;
 /* =============================================== */
 
@@ -431,7 +459,71 @@ function growth() {
 }
 const EGG = '<svg viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#wobble)"><ellipse cx="50" cy="92" rx="30" ry="5" fill="#000" opacity=".12"/><path d="M50 8c20 0 34 30 34 52 0 20-15 32-34 32S16 80 16 60C16 38 30 8 50 8z" fill="#fff6dc" stroke="#4a2e1c" stroke-width="4.5"/><circle cx="38" cy="40" r="5" fill="#f2d48a"/><circle cx="62" cy="58" r="7" fill="#f2d48a"/><circle cx="44" cy="70" r="4" fill="#f2d48a"/><path d="M30 50l8 6 7-7 8 7 7-6" fill="none" stroke="#4a2e1c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/></g></svg>';
 const ADULT = '<svg viewBox="0 0 100 100" aria-hidden="true"><g filter="url(#wobble)"><path d="M6 70c0-14 12-22 30-22 8 0 14-6 14-16 0-14 10-24 23-24s22 10 21 23c-1 9-6 15-13 17 3 6 4 11 3 17-3 20-22 30-44 30S6 86 6 70z" fill="#fffaf2" stroke="#4a2e1c" stroke-width="4.5" stroke-linejoin="round"/><path d="M52 44c8 3 17 3 24-1" fill="none" stroke="#2f8a4a" stroke-width="5" stroke-linecap="round"/><path d="M87 32c7 0 12 3 13 6-3 4-9 6-15 4" fill="#ff7a1a" stroke="#4a2e1c" stroke-width="3.5" stroke-linejoin="round"/><circle cx="78" cy="24" r="4.4" fill="#4a2e1c"/><path d="M18 66c10-3 22 0 27 10-10 6-22 5-29-3" fill="#e6dccb" stroke="#4a2e1c" stroke-width="3.5" stroke-linejoin="round"/><path d="M8 64l-6-8 10 2" fill="#fffaf2" stroke="#4a2e1c" stroke-width="3.5" stroke-linejoin="round"/></g></svg>';
-function duckSVG(look) { look = look || growth().look; return look === "egg" ? EGG : look === "adult" ? ADULT : BABY; }
+/* ---------- 내 오리 꾸미기: 색과 모자 ---------- */
+/* [키, 한국어, 영어, 몸, 날개, 알 껍질, 알 점]  "base"는 단계마다 원래 색(아기는 노랑, 어른은 하양) */
+const DUCK_COLORS = [
+  ["base", "기본", "Classic"],
+  ["yellow", "노랑", "Yellow", "#ffd43d", "#f5b51c", "#fff3c4", "#f2cf5a"],
+  ["white", "하양", "White", "#fffaf2", "#e6dccb", "#fffaf2", "#e6dccb"],
+  ["sky", "하늘", "Sky", "#a9dcf2", "#72bde0", "#e3f4fb", "#9fd2ea"],
+  ["pink", "분홍", "Pink", "#ffbacb", "#f28aa6", "#ffe8ee", "#f7aebf"],
+  ["mint", "연두", "Green", "#bfe38a", "#8fc452", "#eef8dc", "#b5dc84"],
+  ["purple", "보라", "Purple", "#cdb8f2", "#a68bdb", "#efe8fb", "#c6b2ec"],
+  ["orange", "주황", "Orange", "#ffbb73", "#f08c3a", "#ffecd6", "#f7bc80"],
+  ["brown", "갈색", "Brown", "#d1a271", "#a87848", "#f4e4cf", "#d6b48a"],
+];
+/* 모자: [키, 한국어, 영어, 열리는 깃발 수, 그림(머리 꼭대기가 0,0)] */
+const S_ = 'stroke="#4a2e1c" stroke-width="3" stroke-linejoin="round"';
+const HATS = [
+  ["none", "없음", "None", 0, ""],
+  ["bow", "리본", "Bow", 0, `<path d="M0-3L-13-12V5Z" fill="#ff6f91" ${S_}/><path d="M0-3L13-12V5Z" fill="#ff6f91" ${S_}/><circle cy="-3" r="4" fill="#ff9db4" ${S_}/>`],
+  ["flower", "꽃", "Flower", 0, `<g transform="translate(0 -6)">${[0, 72, 144, 216, 288].map(a => `<circle cx="${(7 * Math.cos(a * Math.PI / 180)).toFixed(1)}" cy="${(7 * Math.sin(a * Math.PI / 180)).toFixed(1)}" r="5.5" fill="#fff" ${S_}/>`).join("")}<circle r="4.5" fill="#ffd23d" ${S_}/></g>`],
+  ["beanie", "털모자", "Beanie", 0, `<path d="M-16 3C-16-19 16-19 16 3Z" fill="#5b9be0" ${S_}/><rect x="-17" y="-2" width="34" height="7" rx="3" fill="#3c76b8" ${S_}/><circle cy="-19" r="5" fill="#fff" ${S_}/>`],
+  ["straw", "밀짚모자", "Straw hat", 0, `<ellipse cy="2" rx="24" ry="5.5" fill="#f2cf7a" ${S_}/><path d="M-12 1C-12-17 12-17 12 1Z" fill="#f2cf7a" ${S_}/><path d="M-12-3H12" stroke="#e2553b" stroke-width="4"/>`],
+  ["crown", "왕관", "Crown", 10, `<path d="M-15 3V-14L-7-5 0-19 7-5 15-14V3Z" fill="#ffd23d" ${S_}/><circle cy="-2" r="2.8" fill="#e2553b"/><circle cx="-9" cy="-2" r="2.2" fill="#3c76b8"/><circle cx="9" cy="-2" r="2.2" fill="#3c76b8"/>`],
+  ["wizard", "마법사 모자", "Wizard hat", 20, `<ellipse cy="2" rx="20" ry="4.5" fill="#7b5fd1" ${S_}/><path d="M-13 1L4-31 13 1Z" fill="#7b5fd1" ${S_}/><path d="M1-12l1.6 3.4 3.6.4-2.7 2.4.8 3.6-3.3-1.9-3.3 1.9.8-3.6-2.7-2.4 3.6-.4z" fill="#ffd23d"/>`],
+  ["detective", "탐정 모자", "Detective hat", 30, `<path d="M-16 3C-16-17 16-17 16 3Z" fill="#b08456" ${S_}/><path d="M-16-1l32 0M-12-10l24 0M-4-15v18M5-15v18" stroke="#7c5a35" stroke-width="2" opacity=".7"/><path d="M12 1c6 0 11 1 13 4-5 2-11 1-15-1" fill="#b08456" ${S_}/>`],
+  ["grad", "졸업모자", "Graduation cap", 53, `<path d="M-12-6V3H12V-6" fill="#3b3b44" ${S_}/><path d="M-22-9L0-17 22-9 0-1Z" fill="#3b3b44" ${S_}/><path d="M0-9l14 5v9" fill="none" stroke="#ffd23d" stroke-width="2.4"/><circle cx="14" cy="6" r="2.6" fill="#ffd23d"/>`],
+];
+/* 모자를 얹을 머리 꼭대기 자리와 크기 */
+const HAT_AT = {egg: "translate(50 12) scale(1.15)", baby: "translate(79 12) rotate(-8)", adult: "translate(74 12) rotate(-8)"};
+function myStyle() { const s = store.get("style", {}); return {c: s.c || "base", h: s.h || "none"}; }
+function hatOpen(h) { return Object.keys(passed).length >= h[3]; }
+function duckSVG(look, st) {
+  look = look || growth().look; st = st || myStyle();
+  let svg = look === "egg" ? EGG : look === "adult" ? ADULT : BABY;
+  const c = DUCK_COLORS.find(x => x[0] === st.c);
+  if (c && c[3]) {
+    if (look === "egg") svg = svg.split("#fff6dc").join(c[5]).split("#f2d48a").join(c[6]);
+    else if (look === "adult") svg = svg.split("#fffaf2").join(c[3]).split("#e6dccb").join(c[4]);
+    else svg = svg.split("#ffd43d").join(c[3]).split("#f5b51c").join(c[4]);
+  }
+  const h = HATS.find(x => x[0] === st.h);
+  if (h && h[4] && hatOpen(h)) svg = svg.replace("</g></svg>", `<g transform="${HAT_AT[look]}">${h[4]}</g></g></svg>`);
+  return svg.replace("<svg ", '<svg class="duck" ');
+}
+function viewStyle() {
+  S = {view: "style"}; PAGE = "style"; app.style.setProperty("--cat", "var(--g)");
+  const st = myStyle(), g = growth(), n = Object.keys(passed).length;
+  const hatIcon = h => h[4] ? `<svg viewBox="-26 -34 52 44" aria-hidden="true">${h[4]}</svg>` : `<span class="nohat">✕</span>`;
+  app.innerHTML = `<div class="lesson t-style">
+    <header class="lh"><button class="x" data-act="styledone" aria-label="${L("돌아가기", "Back")}">✕</button><h2 style="flex:1;margin:0;font-size:24px">${L("내 오리 꾸미기", "Dress up my duck")}</h2></header>
+    <main class="lbody" style="justify-content:flex-start;gap:20px">
+      <div class="stylepreview">${["egg", "baby", "adult"].map(k => `<div class="sp ${k === g.look ? "now" : ""}"><span>${duckSVG(k, st)}</span><small>${L({egg: "알", baby: "아기 오리", adult: "어른 오리"}[k], {egg: "Egg", baby: "Baby", adult: "Grown-up"}[k])}</small></div>`).join("")}</div>
+      <section><h3 class="sth">${L("색", "Color")}</h3>
+        <div class="swatches">${DUCK_COLORS.map(c => `<button class="sw ${st.c === c[0] ? "on" : ""}" data-act="setcolor" data-k="${c[0]}" aria-pressed="${st.c === c[0]}" aria-label="${L(c[1], c[2])}"><i style="background:${c[3] ? c[3] : "linear-gradient(135deg,#ffd43d 50%,#fffaf2 50%)"}"></i><small>${L(c[1], c[2])}</small></button>`).join("")}</div></section>
+      <section><h3 class="sth">${L("모자", "Hat")}</h3>
+        <div class="hats">${HATS.map(h => { const open = hatOpen(h); return `<button class="hat ${st.h === h[0] ? "on" : ""} ${open ? "" : "locked"}" data-act="sethat" data-k="${h[0]}" aria-pressed="${st.h === h[0]}" ${open ? "" : "disabled"}>${hatIcon(h)}<small>${open ? L(h[1], h[2]) : `🔒 ${L(`깃발 ${h[3]}개`, `${h[3]} flags`)}`}</small></button>`; }).join("")}</div>
+        <p class="tip" style="margin-top:10px">${L(`깃발을 모으면 새 모자가 열려요 (지금 ${n}개)`, `Collect flags to unlock new hats (you have ${n})`)}</p></section>
+    </main>
+    ${ctaFoot(L("다 꾸몄어요", "Done"), "styledone")}
+  </div>`;
+}
+function setStyle(part, k) {
+  const st = myStyle(); st[part] = k; store.set("style", st);
+  const y = window.scrollY; viewStyle(); window.scrollTo(0, y);
+}
+
 
 /* ---------- 단어 표시 ---------- */
 const plain = m => m.replace(/[\[\]\(\)|]/g, "");
@@ -540,18 +632,7 @@ const ICON_MOUTH = '<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" 
 const ICON_HEAR = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
 
 /* ---------- 기록 보내기 ---------- */
-async function post(rec) { await fetch(SCRIPT_URL, {method: "POST", mode: "no-cors", headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify(rec)}); }
-async function sendRecord(rec) {
-  if (!SCRIPT_URL) return "off";
-  try { await post(rec); return "sent"; }
-  catch (e) { const q = store.get("queue", []); q.push(rec); store.set("queue", q.slice(-50)); return "queued"; }
-}
-async function flushQueue() {
-  if (!SCRIPT_URL) return;
-  const q = store.get("queue", []), left = [];
-  for (const r of q) { try { await post(r); } catch (e) { left.push(r); } }
-  store.set("queue", left);
-}
+try { localStorage.removeItem("duck3.queue"); } catch (e) {}
 
 /* ---------- 표지 + 강물 + 차례 ---------- */
 const app = document.getElementById("app");
@@ -659,6 +740,7 @@ function viewMain() {
     </div>
     <div class="paperbox me">
       <button class="bubble" id="bubble" data-act="talk" aria-live="polite"><span></span></button>
+      <button class="stylebtn" data-act="style">🎨 ${L("꾸미기", "Dress up")}</button>
       <div class="who"><button class="meduck" data-act="talk" aria-label="${L("오리에게 말 걸기", "Talk to the duck")}">${duckSVG(g.look)}</button><div><div class="nickname">${esc(nick || L("이름표", "Name tag"))}</div><span class="grow" aria-label="${L(`나는 ${g.ko}`, `I am ${g.en}`)}"><span aria-hidden="true">${L("나는", "I am")}<i class="dots"><b>.</b><b>.</b><b>.</b><b>.</b></i><em>${L(g.ko, g.en)}</em></span></span>
         ${g.next ? `<div class="nextgrow">${L(`깃발 ${g.next.left}개 더 통과하면 ${g.next.ko}!`, `${g.next.left} more flags to become ${g.next.en}!`)}</div>` : `<div class="nextgrow">${L("다 자랐어요!", "All grown up!")}</div>`}</div></div>
       <div class="prog" aria-label="${L(`깃발 ${total}개 중 ${done}개 통과`, `${done} of ${total} flags passed`)}"><i style="width:${Math.round(done / total * 100)}%"></i></div>
@@ -667,6 +749,7 @@ function viewMain() {
         <dt>${L("최근 시험", "Last test")}</dt><dd>${ls ? `${ls.n} ${esc(T(ls))} · ${last.right}/${last.total} ${last.pass ? "★" : ""} <small>${L(`${last.m}월 ${last.d}일`, `${last.m}/${last.d}`)}</small>` : L("아직 없어요", "Not yet")}</dd>
         <dt>${L("다음 깃발", "Next flag")}</dt><dd>${next.n} ${esc(T(next))}</dd>
       </dl>
+      <button class="linkbtn histbtn" data-act="hist">📋 ${L("내 기록 보기", "My records")}</button>
     </div>
     <div class="row startrow" style="justify-content:center;margin:22px 0 28px"><button class="btn big" data-act="start">${L("시작하기 →", "Start →")}</button></div>
     <p class="copy">© 2026 꽉오리쌤. All rights reserved.</p>
@@ -928,7 +1011,7 @@ function viewCheck() {
   S.view = "check";
   app.innerHTML = lessonFrame(1, `
     <p class="kicker">${L("색연필로 채점해요 · 한 글자라도 다르면 ✕", "Mark your worksheet · one letter wrong = ✕")}</p>
-    <div class="anslist">${S.test.map((it, k) => `<div class="ans"><span class="num">${k + 1}</span>${it.q ? `${dlgHTML(it, "fill")}` : `${picHTML(it[3], "sm", true)}
+    <div class="anslist">${S.test.map((it, k) => `<div class="ans"><span class="num">${k + 1}</span>${it.q ? `<div class="ansq">${dlgHTML(it, "fill")}${S.stage.kind === "m" ? `<p class="mean">${L("정답", "Answer")}: <b lang="ko">${esc(it.a)}</b>${it.alts && it.alts.length > 1 ? ` <small>(${it.alts.filter(a => a !== it.a).map(esc).join(", ")}${L("도 정답", " also OK")})</small>` : ""}</p>` : ""}</div>` : `${picHTML(it[3], "sm", true)}
       <button class="word" data-act="say" data-w="${esc(plain(it[0]))}">${wordHTML(it[0])}</button>`}
       <span class="ox" role="group" aria-label="${k + 1}"><button class="o" data-act="mark" data-k="${k}" data-v="1" aria-pressed="${S.marks[k] === 1}" aria-label="${L("맞음", "Right")}">○</button><button class="x" data-act="mark" data-k="${k}" data-v="0" aria-pressed="${S.marks[k] === 0}" aria-label="${L("틀림", "Wrong")}">✕</button></span></div>`).join("")}</div>
     <p class="err" id="gErr" role="alert"></p>`,
@@ -942,16 +1025,14 @@ async function finishTest() {
   const before = growth().ko;
   if (pass) { passed[s.n] = true; store.set("passed", passed); }
   const now = new Date(); store.set("last", {n: s.n, right, total, pass, m: now.getMonth() + 1, d: now.getDate()});
-  S.res = {hint: S.hint, right, total, wrong, pass, stars, grew: pass && growth().ko !== before, d: now, sent: "wait"};
+  S.res = {hint: S.hint, right, total, wrong, pass, stars, grew: pass && growth().ko !== before, d: now};
+  const hist = store.get("hist", []); hist.push({n: s.n, right, total, pass, hint: !!S.hint, m: now.getMonth() + 1, d: now.getDate()}); store.set("hist", hist.slice(-200));
   viewResult();
-  S.res.sent = await sendRecord({nick, dev, stage: s.n, title: s.title, right, total, wrong: wrong.join(", "), hint: S.res.hint ? "힌트" : ""});
-  if (S && S.view === "result") viewResult();
 }
 function viewResult() {
   S.view = "result";
   const s = S.stage, r = S.res, g = growth();
   const msg = r.pass ? (r.stars === 3 ? L("모두 맞았어요!", "All correct!") : L("통과!", "Passed!")) : L("한 번 더 연습해요", "Practice once more");
-  const sent = {wait: L("보내는 중…", "Sending…"), sent: L("선생님께 보냈어요", "Sent to your teacher"), queued: L("나중에 보낼게요", "Will send later"), off: L("활동지에만 적어요", "Worksheet only")}[r.sent];
   app.innerHTML = lessonFrame(1, `<div class="center" style="gap:10px">
       <div class="bigduck ${r.pass ? "yay" : "oops"}">${duckSVG()}</div>
       <div class="stars" aria-label="${L("별", "stars")} ${r.stars}">${"★".repeat(r.stars)}${"☆".repeat(3 - r.stars)}</div>
@@ -964,7 +1045,7 @@ function viewResult() {
       <dt>${L("맞은 개수", "Score")}</dt><dd>${r.right} / ${r.total}</dd>
       ${r.hint ? `<dt>${L("힌트", "Hint")}</dt><dd>💡 ${L("봤어요", "Used")}</dd>` : ""}
       <dt>${L("고쳐 쓸 것", "Fix these")}</dt><dd>${r.wrong.length ? r.wrong.map(esc).join(", ") : L("없어요", "None")}</dd></dl></div>
-    <p class="tip" style="justify-content:center">${sent}</p>
+    <p class="tip" style="justify-content:center">${L("활동지에 적고 선생님께 보여 드려요", "Write it down and show your teacher")}</p>
     ${r.pass ? "" : `<button class="linkbtn" data-act="relearn">${L("다시 연습하기", "Practice again")}</button>`}`,
     ctaFoot(L("지도로", "Back to the map"), "home"), "t-result");
 }
@@ -1152,10 +1233,25 @@ document.addEventListener("visibilitychange", () => {
 function fitGame() { const g = document.getElementById("game"); if (g && window.visualViewport) { g.style.height = visualViewport.height + "px"; window.scrollTo(0, 0); } }
 if (window.visualViewport) visualViewport.addEventListener("resize", fitGame);
 
+function viewHist() {
+  S = {view: "hist"}; PAGE = "hist"; app.style.setProperty("--cat", "var(--g)");
+  const hist = store.get("hist", []).slice().reverse(), ps = Object.keys(passed).map(Number).sort((a, b) => a - b);
+  app.innerHTML = `<div class="lesson t-hist">
+    <header class="lh"><button class="x" data-act="histdone" aria-label="${L("돌아가기", "Back")}">✕</button><h2 style="flex:1;margin:0;font-size:24px">${L("내 기록", "My records")} · ${esc(nick || "")}</h2></header>
+    <main class="lbody" style="justify-content:flex-start;gap:18px">
+      <section><h3 class="sth">${L(`통과한 깃발 ${ps.length}개`, `${ps.length} flags passed`)}</h3>
+        <div class="flaggrid">${DATA.stages.map(s => `<span class="fg ${passed[s.n] ? "on" : ""}" title="${esc(T(s))}">${s.n}</span>`).join("")}</div></section>
+      <section><h3 class="sth">${L("시험 본 기록", "Tests taken")}</h3>
+        ${hist.length ? `<table class="histtab"><thead><tr><th>${L("날짜", "Date")}</th><th>${L("깃발", "Flag")}</th><th>${L("점수", "Score")}</th><th></th></tr></thead><tbody>${hist.map(x => { const s = DATA.stages.find(y => y.n === x.n); return `<tr><td>${L(`${x.m}월 ${x.d}일`, `${x.m}/${x.d}`)}</td><td><b>${x.n}</b> ${esc(T(s))}</td><td>${x.right}/${x.total}</td><td>${x.pass ? `<span class="okt">${L("통과", "Pass")}</span>` : `<span class="not">${L("다시", "Retry")}</span>`}${x.hint ? " 💡" : ""}</td></tr>`; }).join("")}</tbody></table>` : `<p class="tip">${L("아직 시험 본 기록이 없어요", "No tests yet")}</p>`}</section>
+      <p class="tip">${L("이 기록은 이 기기에만 저장돼요", "These records stay on this device only")}</p>
+    </main>
+    ${ctaFoot(L("돌아가기", "Back"), "histdone")}
+  </div>`;
+}
 function rerender() {
   if (!S) { PAGE === "river" ? viewRiver() : viewMain(); return; }
   if (S.view === "gameplay") return;
-  ({game: viewGame, gameover: viewGameOver, lesson: renderStep, done: viewDone, test: () => viewTest(true), check: viewCheck, result: viewResult}[S.view] || renderStep)();
+  ({hist: viewHist, style: viewStyle, game: viewGame, gameover: viewGameOver, lesson: renderStep, done: viewDone, test: () => viewTest(true), check: viewCheck, result: viewResult}[S.view] || renderStep)();
 }
 function playChain() {
   const cards = [...document.querySelectorAll("#chain .wbtn")];
@@ -1191,6 +1287,12 @@ document.addEventListener("click", e => {
   else if (a === "learn" || a === "testonly") { const n = +b.dataset.n; closeSheet(); turn(() => openStage(n, a === "testonly" ? "test" : "learn"), "fwd"); }
   else if (a === "closesheet") closeSheet();
   else if (a === "hint") showHint();
+  else if (a === "style") turn(viewStyle, "fwd");
+  else if (a === "hist") turn(viewHist, "fwd");
+  else if (a === "histdone") turn(viewMain, "back");
+  else if (a === "styledone") turn(viewMain, "back");
+  else if (a === "setcolor") setStyle("c", b.dataset.k);
+  else if (a === "sethat") setStyle("h", b.dataset.k);
   else if (a === "game") turn(viewGame, "fwd");
   else if (a === "gstart") startGame();
   else if (a === "gquit") { stopGame(); turn(viewRiver, "back"); }
@@ -1226,7 +1328,7 @@ document.addEventListener("submit", e => e.preventDefault());
 
 document.documentElement.lang = LANG; document.documentElement.classList.add("arrive"); setTimeout(() => document.documentElement.classList.remove("arrive"), 6400); dlgText();
 document.getElementById("dlgDuck").innerHTML = BABY;
-viewMain(); flushQueue();
+viewMain();
 if (!nick) askNick();
 </script>
 </body>
